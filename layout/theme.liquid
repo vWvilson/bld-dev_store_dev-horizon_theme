@@ -1,0 +1,521 @@
+<!doctype html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="{{ request.locale.iso_code }}"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js" lang="{{ request.locale.iso_code }}"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{ request.locale.iso_code }}"> <!--<![endif]-->
+<head>
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}" type="image/png" />
+  {%- if template contains 'index' -%}
+  {%- if page_title != blank and page_title != 'Welcome' -%}
+  <title>{{ page_title }}</title>
+  {%- else -%}
+  <title>{{ shop.name }}</title>
+  {%- endif -%}
+  {%- elsif template == '404' -%}
+  <title>Page Not Found - {{ shop.name }}</title>
+  {%- else -%}
+  <title>{{ page_title }} - {{ shop.name }}</title>
+  {%- endif -%}
+  {%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}" />
+  {%- endif -%}
+  <!-- Helpers ================================================== -->
+  {% include 'ultimate-datalayer' %}
+  {%- include 'social-meta-tags' -%}
+  <link rel="canonical" href="{{ canonical_url }}" />
+  {%- if settings.disable_responsive == 'no' -%}
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+  {%- endif -%}
+  <meta name="theme-color" content="{{ settings.color_primary }}" />
+  <!-- CSS ==================================================+ -->
+  {% style %}
+  :root {
+    --theme-color: {{ settings.theme_color }};    
+    --basic-text-color: {{ settings.text_color }};
+    --basic-color-link: {{ settings.color_link }}; 
+    --select-bg-image: url({{ "select-bg.svg" | asset_url }});
+
+    --product-button-hover-color: {{settings.product_button_bg_hover}};
+    --button-quickview-color: {{settings.product_quickview_button_bg}};
+    --product-title-color: {{settings.product_title_color}};
+    --product-price-color: {{settings.product_price_color}};
+    --screen-normal: (max-width: 991px);
+    --screen-medium: (max-width: 767px);
+    --screen-small: (max-width: 575px);
+    --screen-x-small: (max-width: 484px); 
+    --color-white: #fff;
+    --color-black: #000;
+    --color-old-price: #a7a7a7; 
+    --hot-bg: #62b959;
+    --product-sale-bg: {{ settings.sale_label_background_color }};
+    --product-sale-text: {{ settings.sale_label_text_color }};
+    --font-weight-semilight: 200;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;  
+    --price-slider-color: {{ settings.price_slider_color }};
+  }
+  {% endstyle %}
+  {{ 'plugins.css' | asset_url | stylesheet_tag }}
+  {{ 'ultramegamenu.css' | asset_url | stylesheet_tag }}
+  {{ 'styles.css' | asset_url | stylesheet_tag }}
+  {%- capture header_type %}header-{{settings.header_design}}.css{%- endcapture -%}
+  {{ header_type | asset_url | stylesheet_tag }} 
+  {%- if settings.background_color == 'dark' -%}
+  {{ 'dark.css' | asset_url | stylesheet_tag }}
+  {%- endif -%} 
+  {{ 'product-list.css' | asset_url | stylesheet_tag }}
+  {{ 'responsive.css' | asset_url | stylesheet_tag }} 
+  {{ 'config.css' | asset_url | stylesheet_tag }}
+  {%- if settings.layout == '1024px' -%}
+  {{ 'layout_1024.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  {%- if settings.layout == '1280px' -%}
+  {{ 'layout_1280.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  {%- if settings.layout == '1420px' -%}
+  {{ 'layout_1420.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  {%- if settings.layout == 'full_width' -%}
+  {{ 'layout_full_width.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }} 
+  {%- include 'oldIE-js' -%}
+  {{ 'vendor.js' | asset_url | script_tag }}
+  {%- if template contains 'customers' -%}
+  {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+  {%- endif -%}
+  {%- if template == 'collection' or template contains 'collection.' -%}
+  <script src="{{ 'shopify_common.js' | asset_url }}" async></script>
+  <script src="{{ 'jquery.history.min.js' | asset_url }}" async></script>
+  {%- endif -%}
+  <!-- Import custom fonts ====================================================== -->
+  {%- assign mandatory_fonts = "Open Sans, suisseintl, Popppins, Oswald, Shadows Into Light" -%}
+  {%- if settings.basic_font == 'google' -%}
+  {%- unless mandatory_fonts contains settings.google_font -%}
+  <link href="//fonts.googleapis.com/css?family={{ settings.google_font }}:200italic,300italic,400italic,600italic,700italic,800italic,700,200,300,600,800,400&amp;subset=cyrillic-ext,greek-ext,latin,latin-ext,cyrillic,greek,vietnamese" rel='stylesheet' type='text/css'>
+  {%- endunless -%}
+  {%- endif -%}
+  {%- if settings.heading_font == 'google' -%}
+  {%- unless mandatory_fonts contains settings.heading_google_font -%}
+  <link href="//fonts.googleapis.com/css?family={{ settings.heading_google_font }}:200italic,300italic,400italic,600italic,700italic,800italic,700,200,300,600,800,400&amp;subset=cyrillic-ext,greek-ext,latin,latin-ext,cyrillic,greek,vietnamese" rel='stylesheet' type='text/css'>
+  {%- endunless -%}
+  {%- endif -%}
+  {%- if settings.font_menu != '' -%}
+  {%- unless mandatory_fonts contains settings.font_menu -%}
+  <link href="//fonts.googleapis.com/css?family={{ settings.font_menu }}:200italic,300italic,400italic,500italic,600italic,700italic,800italic,700,200,300,600,800,400,500&amp;subset=cyrillic-ext,greek-ext,latin,latin-ext,cyrillic,greek,vietnamese" rel='stylesheet' type='text/css'>
+  {%- endunless -%}
+  {%- endif -%}
+  <script type="text/javascript"> 
+    var asset_url = '{{'/' | asset_url}}';
+    var routes_url = '{{ routes.root_url }}';
+    var money_format = '<span class="money">{{shop.money_format}}</span>'; 
+  </script>  
+  <style>
+    {{settings.custom_style_1}}
+    {{settings.custom_style_2}}
+  </style>
+  
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["Organization", "Store", "ICCompany"],
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name }}",
+    "url": "{{ shop.url }}",
+    "currenciesAccepted": "{{ shop.currency }}",
+    "telephone": "{{ shop.phone }}",
+    "priceRange": "$$$",
+    "image": {
+      "@type": "ImageObject",
+      "url": "{{ shop.url }}/cdn/shop/t/22/assets/ppg-logo-white-border.svg",
+      "width": "1200",
+      "height": "630"
+    },
+    "paymentAccepted": ["Credit Card"],
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "07:00",
+      "closes": "17:00"
+    },
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.share_image %}{{ settings.share_image | img_url: 'master' }}{% else %}{{ shop.url }}/cdn/shop/t/22/assets/ppg-logo-white-border.svg{% endif %}",
+      "width": "1200",
+      "height": "630"
+    },
+    "description": "{{ page_description | escape }}",
+    "foundingDate": "1883",
+    "sameAs": [
+      "https://www.linkedin.com/showcase/ppg-industrial-coatings/",
+      "https://x.com/PPG",
+      "https://www.facebook.com/PPG",
+      "https://www.instagram.com/ppg/"
+    ],
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "telephone": "{{ shop.phone }}",
+        "contactType": "customer service",
+        "availableLanguage": ["English"],
+        "areaServed": "Worldwide",
+        "email": "{{ shop.email }}",
+        "contactOption": "TollFree"
+      }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US",
+      "addressLocality": "Sylmar",
+      "addressRegion": "CA",
+      "postalCode": "91342",
+      "streetAddress": "12780 San Fernando Road"
+    },
+    ],
+    "areaServed": {
+      "@type": "Country",
+      "name": "United States"
+    }
+  }
+  </script>
+
+  <!-- OfferCatalog Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "OfferCatalog",
+    "name": "PPG Aerospace Products",
+    "itemListElement": [
+          ]
+  }
+  </script>
+
+  <!-- WebSite Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "{{ shop.url }}/#website",
+    "name": "{{ shop.name }}",
+    "url": "{{ shop.url }}",
+    "description": "{{ page_description | escape }}",
+    "publisher": {
+      "@id": "{{ shop.url }}/#organization"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{ shop.url }}/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <!-- Product Schema (Only on product pages) -->
+  {% if product %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "@id": "{{ shop.url }}{{ product.url }}#product",
+    "name": "{{ product.title }}",
+    "image": [
+      {% if product.images.size > 0 %}
+        {% for image in product.images %}
+          "{{ image | img_url: 'grande' }}"{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      {% else %}
+        "{{ shop.url }}/cdn/shop/t/22/assets/ppg-logo-white-border.svg"
+      {% endif %}
+    ],
+    "description": "{{ product.description | strip_html | escape }}",
+    "sku": "{{ product.selected_or_first_available_variant.sku }}",
+    "mpn": "{{ product.selected_or_first_available_variant.barcode }}",
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.vendor }}"
+    }
+    {% if product.metafields.reviews.rating %},
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "{{ product.metafields.reviews.rating }}",
+      "reviewCount": "{{ product.metafields.reviews.rating_count }}"
+    }
+    {% endif %}
+    {% if product.variants.size > 1 %},
+    "offers": {
+      "@type": "AggregateOffer",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "priceCurrency": "{{ shop.currency }}",
+      "lowPrice": "{{ product.price_min | money_without_currency }}",
+      "highPrice": "{{ product.price_max | money_without_currency }}",
+      "offerCount": "{{ product.variants.size }}",
+      "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+    }
+    {% else %},
+    "offers": {
+      "@type": "Offer",
+      "url": "{{ shop.url }}{{ product.url }}",
+      "price": "{{ product.price | money_without_currency }}",
+      "priceCurrency": "{{ shop.currency }}",
+      "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+      "sku": "{{ product.selected_or_first_available_variant.sku }}"
+    }
+    {% endif %}
+  }
+  </script>
+  {% endif %}
+
+  <!-- Product Variant Offers (Only on product pages with variants) -->
+  {% if product and product.variants.size > 1 %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      {% for variant in product.variants %}
+      {
+        "@type": "ListItem",
+        "position": {{ forloop.index }},
+        "item": {
+          "@type": "Offer",
+          "price": "{{ variant.price | money_without_currency }}",
+          "priceCurrency": "{{ shop.currency }}",
+          "availability": "{% if variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+          "sku": "{{ variant.sku }}",
+          "url": "{{ shop.url }}{{ product.url }}?variant={{ variant.id }}"
+        }
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+  </script>
+  {% endif %}
+
+  <!-- Shipping Details (Only on product pages) -->
+  {% if product %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "OfferShippingDetails",
+    "shippingRate": {
+      "@type": "MonetaryAmount",
+      "value": 0.00,
+      "currency": "USD"
+    },
+    "shippingDestination": {
+      "@type": "DefinedRegion",
+      "addressCountry": "US"
+    },
+    "deliveryTime": {
+      "@type": "ShippingDeliveryTime",
+      "businessDays": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+      },
+      "cutoffTime": "14:00",
+      "handlingTime": {
+        "@type": "QuantitativeValue",
+        "minValue": 2,
+        "maxValue": 5,
+        "unitCode": "DAY"
+      }
+    }
+  }
+  </script>
+  {% endif %}
+  
+  <!-- BreadcrumbList Schema (Only on product or collection pages) -->
+  {% if template contains 'product' or template contains 'collection' %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "{{ shop.url }}"
+      }
+      {% if collection %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ collection.title }}",
+        "item": "{{ shop.url }}{{ collection.url }}"
+      }
+      {% endif %}
+      {% if product %}
+      ,{
+        "@type": "ListItem",
+        "position": {% if collection %}3{% else %}2{% endif %},
+        "name": "{{ product.title }}",
+        "item": "{{ shop.url }}{{ product.url }}"
+      }
+      {% endif %}
+    ]
+  }
+  </script>
+  {% endif %}
+  
+    <!-- begin site-header -->
+  <div class="wrapper">
+    <div class="page">
+      {% include 'header' %}
+      <!-- //site-header -->
+      {%- if settings.page_header == 'yes' -%}
+      <div class="page-header"></div>
+      {%- endif -%}
+      <div class="main-container {% if template != 'index' and settings.collection_menu_onepage != blank %}onepage-category{% endif %}">
+        {%- if template != 'index' and settings.collection_menu_onepage != blank -%}
+        {% include 'onepage-link'%}
+        {%- endif -%}
+        <div class="main-wrapper">
+          <div class="main pt-main">
+            {{ content_for_layout }}
+          </div>
+        </div>
+      </div>
+      <!-- begin site-footer -->
+      <div class="box_footer">
+        {% section 'footer' %}
+      </div>
+      {% section 'sticky-footer-navbar' %}
+    </div>
+  </div>
+  <!-- //site-footer -->
+  {%- if template contains 'index' and settings.newsletter_enable == '1' -%}
+  {% include 'newsletter-popup' %}
+  {%- elsif settings.newsletter_enable == '2' -%}
+  {% include 'newsletter-popup' %}
+  {%- endif -%}
+  {% include 'box-popup' %}
+  <script type="text/javascript">
+    $("img").addClass('lazyload lazypreload');
+    document.addEventListener('lazybeforeunveil', function(e){
+      var lazy_bg = e.target.getAttribute('data-bg');
+      if(lazy_bg) {
+        e.target.style.backgroundImage = 'url(' + lazy_bg + ')';
+      }
+    });
+    var frontendData = {};
+    frontendData.enableCurrency = {{ settings.currency_enable }};
+    frontendData.ajax_search = {{settings.header_ajax_search}};
+    frontendData.search_by_collection = {{settings.header_search_colletion}};
+    frontendData.imageLazyLoad = {{settings.image_lazyload}};
+     
+    var cartData = {};
+    cartData.ajax_cart_use = {{settings.ajax_cart_use}};
+    cartData.shopping_cart_action = '{{settings.shopping_cart_action}}';
+    var wishlistData = {};
+    var compareData = {};
+    var obProductData = {};
+    obProductData.in_stock = '{{'products.product.in_stock' | t}}';
+    obProductData.out_of_stock = '{{'products.product.out_of_stock' | t}}';
+    obProductData.add_to_cart = '{{'products.product.add_to_cart' | t}}';
+    obProductData.sold_out = '{{'products.product.sold_out' | t}}';
+    cartData.removeItemLabel = '{{ 'cart.header.remove_this_item' | t }}';
+    cartData.totalLabel = '{{ 'cart.header.total' | t }}';
+    cartData.totalNumb = '{{ 'cart.header.total_numb' | t }}';
+    cartData.noItemLabel = '{{ 'cart.header.no_item' | t }}';
+    cartData.buttonViewCart = '{{ 'cart.header.view_cart' | t }}';
+    cartData.buttonCheckout = '{{ 'cart.header.checkout' | t }}';
+    window.inventory_text = {
+      in_stock: "{{ 'products.product.in_stock' | t }}",
+      many_in_stock: "{{ 'products.product.many_in_stock' | t }}",
+      out_of_stock: "{{ 'products.product.out_of_stock' | t }}",
+      add_to_cart: "{{ 'products.product.add_to_cart' | t }}",
+      sold_out: "{{ 'products.product.sold_out' | t }}"
+    };
+
+    window.date_text = {
+      year_text: "{{ 'general.date.year_text' | t }}",
+      month_text: "{{ 'general.date.month_text' | t }}",
+      week_text: "{{ 'general.date.week_text' | t }}",
+      day_text: "{{ 'general.date.day_text' | t }}",
+      year_singular_text: "{{ 'general.date.year_singular_text' | t }}",
+      month_singular_text: "{{ 'general.date.month_singular_text' | t }}",
+      week_singular_text: "{{ 'general.date.week_singular_text' | t }}",
+      day_singular_text: "{{ 'general.date.day_singular_text' | t }}",
+      hour_text: "{{ 'general.date.hour_text' | t }}",
+      min_text: "{{ 'general.date.min_text' | t }}",
+      sec_text: "{{ 'general.date.sec_text' | t }}",
+      hour_singular_text: "{{ 'general.date.hour_singular_text' | t }}",
+      min_singular_text: "{{ 'general.date.min_singular_text' | t }}",
+      sec_singular_text: "{{ 'general.date.sec_singular_text' | t }}"
+    };
+    wishlistData.wishlist = '{{'wish_list.general.wishlist' | t}}';
+    wishlistData.product = '{{'wish_list.general.product' | t}}';
+    wishlistData.instock = '{{ 'products.product.in_stock' | t }}';
+    wishlistData.outstock = '{{'products.product.out_of_stock' | t}}';
+    wishlistData.addtocart = '{{'products.product.add_to_cart' | t}}';
+    wishlistData.remove = '{{'wish_list.general.remove' | t}}';
+    wishlistData.no_item = '{{'wish_list.general.no_item' | t}}';
+    wishlistData.item_exist = '{{'wish_list.general.item_exist' | t}}';
+    wishlistData.item_added = '{{'wish_list.general.item_added' | t}}';
+    compareData.compare = '{{'compare_list.general.compare' | t}}';
+    compareData.product = '{{'compare_list.general.product' | t}}';
+    compareData.quantity = '{{'compare_list.general.quantity' | t}}';
+    compareData.options = '{{'compare_list.general.options' | t}}';
+    compareData.remove = '{{'compare_list.general.remove' | t}}';
+    compareData.no_item = '{{'compare_list.general.no_item' | t}}';
+    compareData.item_exist = '{{'compare_list.general.item_exist' | t}}';
+    compareData.item_added = '{{'compare_list.general.item_added' | t}}'; 
+  </script> 
+  {%- if settings.image_lazyload == blank -%}
+  <script>
+    $("img").removeClass('lazyload lazypreload').css("padding-top", "");
+    $("img").each(function() {
+      if($(this).data('src')) {
+        $(this).attr("src", $(this).data('src'));
+      }
+    });
+    $('.lazyload').each(function() {
+      $(this).removeClass('lazyload lazypreload');
+      var lazy_bgs = $(this).data('bg');
+      if(lazy_bgs){
+        $(this).css("background-image", 'url(' + lazy_bgs + ')');
+      }
+    });
+  </script>
+  {%- endif -%}
+  {{ 'theme-scripts.js' | asset_url | script_tag }}
+  {{ "jquery.elevatezoom.min.js" | asset_url | script_tag }} 
+  <script src="{{ 'theme.js' | asset_url }}" async></script>
+  <script src="{{ 'api.jquery.js' | shopify_asset_url }}" async></script>
+  {{ 'option_selection.js' | asset_url | script_tag }}  
+  <script>
+    {% if newHash %}
+      $(function() {
+        form.updateHash('{{ newHash }}');
+      });
+    {% endif %}
+    {% if resetPassword %}
+      $(function() {
+        form.resetPasswordSuccess();
+      });
+    {% endif %}
+  </script>
+  {% include 'wishlist-modal' %}
+  {% include 'compare-modal' %}
+  {%- if settings.login_popup != blank -%}
+  {%- unless template contains 'customers' -%}
+  {% include 'login-popup' %}
+  {%- endunless -%}
+  {%- endif -%} 
+  {% include 'custom-fonts' %}
+</body>
+</html>

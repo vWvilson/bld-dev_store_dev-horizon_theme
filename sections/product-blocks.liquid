@@ -1,0 +1,795 @@
+<!-- Product Blocks Section -->
+{{ 'product.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .product-blocks-section {
+    padding: {{ section.settings.padding_top }}
+    px 0{{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  /* Documents Block */
+  .product-documents {
+    margin-bottom: 20px;
+  }
+  .product-documents .block-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .product-documents ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .product-documents li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .product-documents li:last-child {
+    border-bottom: none;
+  }
+  .product-documents a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .product-documents a:hover {
+    color: var(--theme-color, #0066cc);
+  }
+  .product-documents .doc-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .product-documents .doc-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Total Price Block */
+  .product-total-price {
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .product-total-price .price-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  .product-total-price .price-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+  }
+  .product-total-price .price-compare {
+    font-size: 16px;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 10px;
+  }
+  .product-total-price .quantity-wrapper {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .product-total-price .quantity-label {
+    font-size: 14px;
+    color: #666;
+  }
+  .product-total-price .quantity-input {
+    width: 80px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  /* Accordion Block */
+  .product-accordion {
+    margin-bottom: 20px;
+  }
+  .product-accordion .accordion-item {
+    border: 1px solid #eee;
+    margin-bottom: -1px;
+  }
+  .product-accordion .accordion-item:first-child {
+    border-radius: 8px 8px 0 0;
+  }
+  .product-accordion .accordion-item:last-child {
+    border-radius: 0 0 8px 8px;
+  }
+  .product-accordion .accordion-header {
+    padding: 15px 20px;
+    background: #f9f9f9;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  .product-accordion .accordion-header:hover {
+    background: #f0f0f0;
+  }
+  .product-accordion .accordion-header .icon {
+    transition: transform 0.3s ease;
+  }
+  .product-accordion .accordion-item.active .accordion-header .icon {
+    transform: rotate(180deg);
+  }
+  .product-accordion .accordion-content {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease
+    , padding 0.3s ease;
+  }
+  .product-accordion .accordion-item.active .accordion-content {
+    padding: 15px 20px;
+    max-height: 500px;
+  }
+
+  /* Stock Status Icons */
+  .stock-status-icons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .stock-status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .stock-status-item.in-stock {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  .stock-status-item.made-to-order {
+    background: #fff3e0;
+    color: #ef6c00;
+  }
+  .stock-status-item.out-of-stock {
+    background: #ffebee;
+    color: #c62828;
+  }
+  .stock-status-item .status-icon {
+    width: 20px;
+    height: 20px;
+  }
+  .stock-status-item.active {
+    border: 2px solid currentColor;
+  }
+  .stock-status-item:not(.active) {
+    opacity: 0.5;
+  }
+
+  /* Related Products Block */
+  .related-products-block {
+    margin-bottom: 30px;
+  }
+  .related-products-block .block-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+  .related-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 991px) {
+    .related-products-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 767px) {
+    .related-products-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .related-products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="product-blocks-section">
+  <div class="container">
+    {% for block in section.blocks %}
+      {% case block.type %}
+
+        {%- when 'documents' -%}
+          <div class="product-documents" {{ block.shopify_attributes }}>
+            {% if block.settings.title != blank %}
+              <h3 class="block-title">{{ block.settings.title }}</h3>
+            {% endif %}
+            <ul>
+              {% if block.settings.document_1 != blank %}
+                <li>
+                  <a href="{{ block.settings.document_1 }}" target="_blank">
+                    <span class="doc-icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" /></svg>
+                    </span>
+                    <span>{{ block.settings.document_1_label | default: 'Document 1' }}</span>
+                  </a>
+                </li>
+              {% endif %}
+              {% if block.settings.document_2 != blank %}
+                <li>
+                  <a href="{{ block.settings.document_2 }}" target="_blank">
+                    <span class="doc-icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" /></svg>
+                    </span>
+                    <span>{{ block.settings.document_2_label | default: 'Document 2' }}</span>
+                  </a>
+                </li>
+              {% endif %}
+              {% if block.settings.document_3 != blank %}
+                <li>
+                  <a href="{{ block.settings.document_3 }}" target="_blank">
+                    <span class="doc-icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" /></svg>
+                    </span>
+                    <span>{{ block.settings.document_3_label | default: 'Document 3' }}</span>
+                  </a>
+                </li>
+              {% endif %}
+              {%- comment -%} Metafield documents {%- endcomment -%}
+              {% if block.settings.use_metafield and product.metafields.custom.documents != blank %}
+                {% assign docs = product.metafields.custom.documents.value %}
+                {% for doc in docs %}
+                  <li>
+                    <a href="{{ doc.file.url }}" target="_blank">
+                      <span class="doc-icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" /></svg>
+                      </span>
+                      <span>{{ doc.title | default: doc.file.filename }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </div>
+
+        {%- when 'total_price' -%}
+          <div class="product-total-price" {{ block.shopify_attributes }}>
+            {% if block.settings.show_label %}
+              <div class="price-label">{{ block.settings.label | default: 'Total Price' }}</div>
+            {% endif %}
+            <div class="price-row">
+              <span class="price-value" data-product-price>
+                {{ product.selected_or_first_available_variant.price | money }}
+              </span>
+              {% if product.compare_at_price > product.price %}
+                <span class="price-compare">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {% endif %}
+            </div>
+            {% if block.settings.show_quantity %}
+              <div class="quantity-wrapper">
+                <span class="quantity-label">{{ 'products.product.quantity' | t }}:</span>
+                <input
+                  type="number"
+                  class="quantity-input"
+                  value="1"
+                  min="1"
+                  data-quantity-input>
+              </div>
+            {% endif %}
+          </div>
+
+        {%- when 'accordion' -%}
+          <div class="product-accordion" {{ block.shopify_attributes }}>
+            {% if block.settings.heading_1 != blank %}
+              <div class="accordion-item{% if block.settings.open_first %} active{% endif %}">
+                <div class="accordion-header">
+                  <span>{{ block.settings.heading_1 }}</span>
+                  <span class="icon">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="currentColor"><path d="M6 8.5L1 3.5h10L6 8.5z" /></svg>
+                  </span>
+                </div>
+                <div class="accordion-content">
+                  {{ block.settings.content_1 }}
+                </div>
+              </div>
+            {% endif %}
+            {% if block.settings.heading_2 != blank %}
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>{{ block.settings.heading_2 }}</span>
+                  <span class="icon">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="currentColor"><path d="M6 8.5L1 3.5h10L6 8.5z" /></svg>
+                  </span>
+                </div>
+                <div class="accordion-content">
+                  {{ block.settings.content_2 }}
+                </div>
+              </div>
+            {% endif %}
+            {% if block.settings.heading_3 != blank %}
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>{{ block.settings.heading_3 }}</span>
+                  <span class="icon">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="currentColor"><path d="M6 8.5L1 3.5h10L6 8.5z" /></svg>
+                  </span>
+                </div>
+                <div class="accordion-content">
+                  {{ block.settings.content_3 }}
+                </div>
+              </div>
+            {% endif %}
+            {% if block.settings.heading_4 != blank %}
+              <div class="accordion-item">
+                <div class="accordion-header">
+                  <span>{{ block.settings.heading_4 }}</span>
+                  <span class="icon">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="currentColor"><path d="M6 8.5L1 3.5h10L6 8.5z" /></svg>
+                  </span>
+                </div>
+                <div class="accordion-content">
+                  {{ block.settings.content_4 }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+        {%- when 'stock_status' -%}
+          <div class="stock-status-icons" {{ block.shopify_attributes }}>
+            {%- assign current_variant = product.selected_or_first_available_variant -%}
+            {%- assign inventory_qty = current_variant.inventory_quantity -%}
+            {%- assign inventory_policy = current_variant.inventory_policy -%}
+          {%- assign inventory_management = current_variant.inventory_management -%}
+
+            {%- comment -%} Determine stock status {%- endcomment -%}
+            {%- assign is_in_stock = false -%}
+            {%- assign is_made_to_order = false -%}
+            {%- assign is_out_of_stock = false -%}
+
+            {%- if current_variant.available -%}
+              {%- if inventory_management == null or inventory_qty > 0 -%}
+                {%- assign is_in_stock = true -%}
+              {%- elsif inventory_policy == 'continue' -%}
+                {%- assign is_made_to_order = true -%}
+              {%- endif -%}
+            {%- else -%}
+              {%- assign is_out_of_stock = true -%}
+            {%- endif -%}
+
+            {%- comment -%} Check for metafield override {%- endcomment -%}
+            {%- if product.metafields.custom.stock_status != blank -%}
+              {%- assign meta_status = product.metafields.custom.stock_status -%}
+              {%- if meta_status == 'in_stock' -%}
+                {%- assign is_in_stock = true -%}
+                {%- assign is_made_to_order = false -%}
+                {%- assign is_out_of_stock = false -%}
+              {%- elsif meta_status == 'made_to_order' -%}
+                {%- assign is_in_stock = false -%}
+                {%- assign is_made_to_order = true -%}
+                {%- assign is_out_of_stock = false -%}
+              {%- elsif meta_status == 'out_of_stock' -%}
+                {%- assign is_in_stock = false -%}
+                {%- assign is_made_to_order = false -%}
+                {%- assign is_out_of_stock = true -%}
+              {%- endif -%}
+            {%- endif -%}
+
+            <div class="stock-status-item in-stock{% if is_in_stock %} active{% endif %}">
+              <span class="status-icon">
+                {% if block.settings.in_stock_icon != blank %}
+                  <img src="{{ block.settings.in_stock_icon | image_url: width: 40 }}" alt="In Stock">
+                {% else %}
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
+                {% endif %}
+              </span>
+              <span>{{ block.settings.in_stock_text | default: 'In Stock' }}</span>
+            </div>
+
+            <div class="stock-status-item made-to-order{% if is_made_to_order %} active{% endif %}">
+              <span class="status-icon">
+                {% if block.settings.made_to_order_icon != blank %}
+                  <img src="{{ block.settings.made_to_order_icon | image_url: width: 40 }}" alt="Made to Order">
+                {% else %}
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" /></svg>
+                {% endif %}
+              </span>
+              <span>{{ block.settings.made_to_order_text | default: 'Made to Order' }}</span>
+            </div>
+
+            <div class="stock-status-item out-of-stock{% if is_out_of_stock %} active{% endif %}">
+              <span class="status-icon">
+                {% if block.settings.out_of_stock_icon != blank %}
+                  <img src="{{ block.settings.out_of_stock_icon | image_url: width: 40 }}" alt="Out of Stock">
+                {% else %}
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" /></svg>
+                {% endif %}
+              </span>
+              <span>{{ block.settings.out_of_stock_text | default: 'Out of Stock' }}</span>
+            </div>
+          </div>
+
+        {%- when 'related_products' -%}
+          <div class="related-products-block" {{ block.shopify_attributes }}>
+            {% if block.settings.title != blank %}
+              <h2 class="block-title">{{ block.settings.title }}</h2>
+            {% endif %}
+
+            <div class="related-products-grid">
+              {%- if block.settings.collection != blank -%}
+                {%- assign related_collection = collections[block.settings.collection] -%}
+                {%- for related_product in related_collection.products limit: block.settings.limit -%}
+                  {%- if related_product.id != product.id -%}
+                    {% render 'pt-product-loop'
+                      , product: related_product %}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%} Use product recommendations {%- endcomment -%}
+                {%- assign related_products = product.metafields.custom.related_products.value | default: recommendations.products -%}
+                {%- for related_product in related_products limit: block.settings.limit -%}
+                  {% render 'pt-product-loop'
+                    , product: related_product %}
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          </div>
+
+        {%- when 'custom_html' -%}
+          <div class="custom-html-block" {{ block.shopify_attributes }}>
+            {{ block.settings.html }}
+          </div>
+
+      {% endcase %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Accordion functionality
+    document.querySelectorAll('.product-accordion .accordion-header').forEach(function(header) {
+      header.addEventListener('click', function() {
+        var item = this.parentElement;
+        var wasActive = item.classList.contains('active');
+        
+        // Close all items in this accordion
+        item.parentElement.querySelectorAll('.accordion-item').forEach(function(el) {
+          el.classList.remove('active');
+        });
+        
+        // Toggle clicked item
+        if (!wasActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+    
+    // Quantity-based total price update
+    document.querySelectorAll('[data-quantity-input]').forEach(function(input) {
+      input.addEventListener('change', function() {
+        var qty = parseInt(this.value) || 1;
+        var priceEl = this.closest('.product-total-price').querySelector('[data-product-price]');
+        // Update price display based on quantity
+        // This is a simplified version - actual implementation would need to handle formatting
+      });
+    });
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Product Blocks",
+    "class": "product-blocks-wrapper",
+    "settings": [
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Padding Top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "default": 30,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Padding Bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "default": 30,
+        "unit": "px"
+      }, {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#ffffff"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "documents",
+        "name": "Product Documents",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Product Documents"
+          },
+          {
+            "type": "checkbox",
+            "id": "use_metafield",
+            "label": "Use documents from metafield",
+            "info": "Reads from product.metafields.custom.documents",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Manual Documents"
+          },
+          {
+            "type": "url",
+            "id": "document_1",
+            "label": "Document 1 URL"
+          }, {
+            "type": "text",
+            "id": "document_1_label",
+            "label": "Document 1 Label",
+            "default": "Specification Sheet"
+          }, {
+            "type": "url",
+            "id": "document_2",
+            "label": "Document 2 URL"
+          }, {
+            "type": "text",
+            "id": "document_2_label",
+            "label": "Document 2 Label",
+            "default": "User Manual"
+          }, {
+            "type": "url",
+            "id": "document_3",
+            "label": "Document 3 URL"
+          }, {
+            "type": "text",
+            "id": "document_3_label",
+            "label": "Document 3 Label",
+            "default": "Warranty Information"
+          }
+        ]
+      },
+      {
+        "type": "total_price",
+        "name": "Total Price",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "show_label",
+            "label": "Show Label",
+            "default": true
+          }, {
+            "type": "text",
+            "id": "label",
+            "label": "Price Label",
+            "default": "Total Price"
+          }, {
+            "type": "checkbox",
+            "id": "show_quantity",
+            "label": "Show Quantity Selector",
+            "default": false
+          }
+        ]
+      },
+      {
+        "type": "accordion",
+        "name": "Accordion",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "open_first",
+            "label": "Open first item by default",
+            "default": true
+          },
+          {
+            "type": "header",
+            "content": "Item 1"
+          },
+          {
+            "type": "text",
+            "id": "heading_1",
+            "label": "Heading 1",
+            "default": "Product Details"
+          },
+          {
+            "type": "richtext",
+            "id": "content_1",
+            "label": "Content 1",
+            "default": "<p>Add your product details here.</p>"
+          }, {
+            "type": "header",
+            "content": "Item 2"
+          }, {
+            "type": "text",
+            "id": "heading_2",
+            "label": "Heading 2",
+            "default": "Shipping Information"
+          }, {
+            "type": "richtext",
+            "id": "content_2",
+            "label": "Content 2",
+            "default": "<p>Add shipping information here.</p>"
+          }, {
+            "type": "header",
+            "content": "Item 3"
+          }, {
+            "type": "text",
+            "id": "heading_3",
+            "label": "Heading 3"
+          }, {
+            "type": "richtext",
+            "id": "content_3",
+            "label": "Content 3"
+          }, {
+            "type": "header",
+            "content": "Item 4"
+          }, {
+            "type": "text",
+            "id": "heading_4",
+            "label": "Heading 4"
+          }, {
+            "type": "richtext",
+            "id": "content_4",
+            "label": "Content 4"
+          }
+        ]
+      },
+      {
+        "type": "stock_status",
+        "name": "Stock Status Icons",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "header",
+            "content": "In Stock"
+          },
+          {
+            "type": "image_picker",
+            "id": "in_stock_icon",
+            "label": "In Stock Icon",
+            "info": "Leave blank for default checkmark"
+          },
+          {
+            "type": "text",
+            "id": "in_stock_text",
+            "label": "In Stock Text",
+            "default": "In Stock"
+          },
+          {
+            "type": "header",
+            "content": "Made to Order"
+          }, {
+            "type": "image_picker",
+            "id": "made_to_order_icon",
+            "label": "Made to Order Icon",
+            "info": "Leave blank for default clock"
+          }, {
+            "type": "text",
+            "id": "made_to_order_text",
+            "label": "Made to Order Text",
+            "default": "Made to Order"
+          }, {
+            "type": "header",
+            "content": "Out of Stock"
+          }, {
+            "type": "image_picker",
+            "id": "out_of_stock_icon",
+            "label": "Out of Stock Icon",
+            "info": "Leave blank for default X"
+          }, {
+            "type": "text",
+            "id": "out_of_stock_text",
+            "label": "Out of Stock Text",
+            "default": "Out of Stock"
+          }
+        ]
+      }, {
+        "type": "related_products",
+        "name": "Related Products",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Related Products"
+          }, {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection",
+            "info": "Leave blank to use product recommendations"
+          }, {
+            "type": "range",
+            "id": "limit",
+            "label": "Number of products",
+            "min": 2,
+            "max": 12,
+            "step": 1,
+            "default": 4
+          }
+        ]
+      }, {
+        "type": "custom_html",
+        "name": "Custom HTML",
+        "settings": [
+          {
+            "type": "html",
+            "id": "html",
+            "label": "HTML Content"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product Blocks",
+        "blocks": [
+          {
+            "type": "stock_status"
+          }, {
+            "type": "total_price"
+          }, {
+            "type": "accordion"
+          }
+        ]
+      }
+    ],
+    "templates": ["product"]
+  }
+{% endschema %}

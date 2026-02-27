@@ -1,0 +1,471 @@
+{{ 'section-main.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .two-column-content-section {
+    margin-top: {{ section.settings.margin_top }};
+    margin-bottom: {{ section.settings.margin_bottom }};
+    padding: {{ section.settings.section_padding }};
+    background-color: {{ section.settings.background_color }};
+  }
+  .two-column-content__inner {
+    max-width: 100%;
+  }
+  .two-column-content__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: {{ section.settings.column_gap }}px;
+    align-items: {{ section.settings.vertical_alignment }};
+  }
+  .two-column-content__column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .two-column-content__headline {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.1;
+  }
+  .two-column-content__text {
+    color: rgba(17, 17, 17, 0.75);
+  }
+  .two-column-content__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    border: 1px solid transparent;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    transition: background-color 0.3s ease
+    , color 0.3s ease
+    , border-color 0.3s ease;
+  }
+  .two-column-content__button.btn--primary {
+    background-color: {{ section.settings.primary_button_bg }};
+    color: {{ section.settings.primary_button_text }};
+    border-color: {{ section.settings.primary_button_bg }};
+  }
+  .two-column-content__button.btn--primary:hover {
+    opacity: 0.85;
+  }
+  .two-column-content__button.btn--secondary {
+    background-color: transparent;
+    color: {{ section.settings.secondary_button_text }};
+    border-color: {{ section.settings.secondary_button_text }};
+  }
+  .two-column-content__button.btn--secondary:hover {
+    background-color: {{ section.settings.secondary_button_text }};
+    color: #ffffff;
+  }
+  .two-column-content__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ section.settings.image_radius }}px;
+  }
+  .two-column-content__image-placeholder {
+    background-color: rgba(17, 17, 17, 0.05);
+    border: 1px dashed rgba(17, 17, 17, 0.2);
+    border-radius: {{ section.settings.image_radius }}px;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: rgba(17, 17, 17, 0.6);
+  }
+  @media (max-width: 989px) {
+    .two-column-content__grid {
+      grid-template-columns: 1fr;
+    }
+    .two-column-content__column {
+      gap: 1rem;
+    }
+  }
+{%- endstyle -%}
+
+<section class="two-column-content-section" data-section-id="{{ section.id }}">
+  <div class="two-column-content__inner{% if section.settings.section_width == 'page' %} container{% endif %}">
+    <div class="two-column-content__grid">
+      {%- assign columns = 'left,right' | split: ',' -%}
+      {%- for column in columns -%}
+        <div class="two-column-content__column two-column-content__column--{{ column }}">
+          {%- assign has_blocks = false -%}
+          {%- for block in section.blocks -%}
+            {%- if block.settings.column == column -%}
+              {%- assign has_blocks = true -%}
+              {%- case block.type -%}
+                {%- when 'headline' -%}
+                  {%- if block.settings.headline != blank -%}
+                    <h2
+                      class="two-column-content__headline"
+                      style="text-align: {{ block.settings.text_alignment }};"
+                      {{ block.shopify_attributes }}>
+                      {{ block.settings.headline }}
+                    </h2>
+                  {%- endif -%}
+                {%- when 'text' -%}
+                  {%- if block.settings.body != blank -%}
+                    <div
+                      class="two-column-content__text rte"
+                      style="text-align: {{ block.settings.text_alignment }};"
+                      {{ block.shopify_attributes }}>
+                      {{ block.settings.body }}
+                    </div>
+                  {%- endif -%}
+                {%- when 'button' -%}
+                  {%- if block.settings.label != blank -%}
+                    <div style="text-align: {{ block.settings.text_alignment }};" {{ block.shopify_attributes }}>
+                      <a
+                        class="two-column-content__button btn--{{ block.settings.button_style }}"
+                        href="{{ block.settings.link | default: '#' }}"
+                        target="{% if block.settings.open_in_new_tab %}_blank{% else %}_self{% endif %}"
+                        {% if block.settings.open_in_new_tab %}
+                        rel="noopener noreferrer"
+                        {% endif %}>
+                        {{ block.settings.label }}
+                      </a>
+                    </div>
+                  {%- endif -%}
+                {%- when 'image' -%}
+                  <div class="two-column-content__image" {{ block.shopify_attributes }}>
+                    {%- if block.settings.image != blank -%}
+                      <img
+                        src="{{ block.settings.image | image_url: width: block.settings.image_width }}"
+                        alt="{{ block.settings.alt_text | escape }}"
+                        loading="lazy"
+                        width="{{ block.settings.image_width }}">
+                    {%- else -%}
+                      <div class="two-column-content__image-placeholder">
+                        {{ 'sections.collection-general.image_placeholder' | t }}
+                      </div>
+                    {%- endif -%}
+                  </div>
+              {%- endcase -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless has_blocks -%}
+            <div class="two-column-content__text" style="text-align: center; color: rgba(17, 17, 17, 0.6);">
+              {{ 'sections.collection-template.empty' | t }}
+            </div>
+          {%- endunless -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Two column content",
+    "tag": "section",
+    "class": "section-two-column-content",
+    "max_blocks": 12,
+    "settings": [
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Section width",
+        "default": "page",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full width"
+          }, {
+            "value": "page",
+            "label": "Page width"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "text",
+        "id": "section_padding",
+        "label": "Section padding",
+        "default": "60px 0"
+      },
+      {
+        "type": "range",
+        "id": "column_gap",
+        "label": "Column gap",
+        "min": 10,
+        "max": 80,
+        "step": 5,
+        "default": 40,
+        "unit": "px"
+      }, {
+        "type": "select",
+        "id": "vertical_alignment",
+        "label": "Column alignment",
+        "default": "stretch",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Top"
+          }, {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "flex-end",
+            "label": "Bottom"
+          }, {
+            "value": "stretch",
+            "label": "Stretch"
+          }
+        ]
+      }, {
+        "type": "text",
+        "id": "margin_top",
+        "label": "Margin top",
+        "default": "0px"
+      }, {
+        "type": "text",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "default": "0px"
+      }, {
+        "type": "header",
+        "content": "Button styles"
+      }, {
+        "type": "color",
+        "id": "primary_button_bg",
+        "label": "Primary button background",
+        "default": "#111111"
+      }, {
+        "type": "color",
+        "id": "primary_button_text",
+        "label": "Primary button text",
+        "default": "#ffffff"
+      }, {
+        "type": "color",
+        "id": "secondary_button_text",
+        "label": "Secondary button color",
+        "default": "#111111"
+      }, {
+        "type": "range",
+        "id": "image_radius",
+        "label": "Image corner radius",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "default": 12,
+        "unit": "px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "headline",
+        "name": "Headline",
+        "settings": [
+          {
+            "type": "text",
+            "id": "headline",
+            "label": "Headline text",
+            "default": "Layer your story"
+          }, {
+            "type": "select",
+            "id": "column",
+            "label": "Column",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }, {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "center",
+                "label": "Center"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      }, {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "richtext",
+            "id": "body",
+            "label": "Text",
+            "default": "<p>Share your brand story, product details, or care tips.</p>"
+          }, {
+            "type": "select",
+            "id": "column",
+            "label": "Column",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }, {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "center",
+                "label": "Center"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      }, {
+        "type": "button",
+        "name": "Button",
+        "settings": [
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Button label",
+            "default": "Shop now"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Button link"
+          },
+          {
+            "type": "checkbox",
+            "id": "open_in_new_tab",
+            "label": "Open in new tab"
+          },
+          {
+            "type": "select",
+            "id": "column",
+            "label": "Column",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }, {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Alignment",
+            "default": "left",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "center",
+                "label": "Center"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }, {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "default": "primary",
+            "options": [
+              {
+                "value": "primary",
+                "label": "Primary"
+              }, {
+                "value": "secondary",
+                "label": "Secondary"
+              }
+            ]
+          }
+        ]
+      }, {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }, {
+            "type": "text",
+            "id": "alt_text",
+            "label": "Alt text"
+          }, {
+            "type": "range",
+            "id": "image_width",
+            "label": "Rendered width",
+            "min": 400,
+            "max": 1600,
+            "step": 100,
+            "default": 1000,
+            "unit": "px"
+          }, {
+            "type": "select",
+            "id": "column",
+            "label": "Column",
+            "default": "right",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Two column content",
+        "blocks": [
+          {
+            "type": "headline"
+          }, {
+            "type": "text"
+          }, {
+            "type": "button"
+          }, {
+            "type": "image",
+            "settings": {
+              "column": "right"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

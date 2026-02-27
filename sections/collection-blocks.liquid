@@ -1,0 +1,208 @@
+{{ 'section-main.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  h2 {
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 30px;
+  }
+  .collection-blocks-section {
+    padding: 100px 0;
+    margin-top: {{ section.settings.margin_top }};
+    margin-bottom: {{ section.settings.margin_bottom }};
+    background-color: {{ section.settings.background_color }};
+  }
+  .collection-blocks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.gap }}px;
+  }
+  .collection-block {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    background-color: #fff;
+    min-width: 250px;
+    max-width: 360px;
+    border: 1px solid #DADADA;
+  }
+  .collection-block__image {
+    width: 100%;
+    height: auto;
+    padding: 7px;
+    max-width: 200px;
+  }
+  .collection-block-container {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .collection-block__title {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: {{ section.settings.title_color }};
+  }
+  .collection-block__link {
+    display: block;
+    color: {{ section.settings.button_text_color }};
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: opacity 0.3s ease;
+  }
+  .collection-block__link:hover {
+    opacity: 0.85;
+  }
+  @media screen and (max-width: 768px) {
+    .collection-block {
+      min-width: 100%;
+    }
+  }
+{%- endstyle -%}
+
+<section class="collection-blocks-section" data-section-id="{{ section.id }}">
+  <div class="container">
+    <h2>
+      <Strong>Top Categories
+      </Strong>To Shop</h2>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="collection-blocks-container{% if section.settings.section_width == 'page' %} container{% endif %}">
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'collection_block' -%}
+            <div class="collection-block" {{ block.shopify_attributes }}>
+
+              {%- if block.settings.collection != blank -%}
+                {%- assign block_image = block.settings.collection.image | default: block.settings.collection.products.first.featured_image -%}
+                <div class="collection-block-container">
+                  <h3 class="collection-block__title">{{ block.settings.collection.title }}</h3>
+                  <a href="{{ block.settings.collection.url }}" class="collection-block__link">Shop Now</a>
+                </div>
+
+                {%- if block_image != blank -%}
+                  <img
+                    class="collection-block__image"
+                    src="{{ block_image | image_url: width: 600 }}"
+                    alt="{{ block.settings.collection.title }}"
+                    width="600"
+                    height="600"
+                    loading="lazy">
+                {%- endif -%}
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg collection-block__image' }}
+
+
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+  {
+    "name": "Collection Blocks",
+    "tag": "section",
+    "class": "section-collection-blocks",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Section Width",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full Width"
+          }, {
+            "value": "page",
+            "label": "Page Width"
+          }
+        ],
+        "default": "page"
+      },
+      {
+        "type": "range",
+        "id": "gap",
+        "label": "Gap Between Blocks",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "default": 20,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "Typography"
+      }, {
+        "type": "range",
+        "id": "title_size",
+        "label": "Title Size",
+        "min": 14,
+        "max": 36,
+        "step": 1,
+        "default": 20,
+        "unit": "px"
+      }, {
+        "type": "color",
+        "id": "title_color",
+        "label": "Title Color",
+        "default": "#333333"
+      }, {
+        "type": "header",
+        "content": "Link Styles"
+      }, {
+        "type": "color",
+        "id": "button_text_color",
+        "label": "Button Text Color",
+        "default": "#ffffff"
+      }, {
+        "type": "header",
+        "content": "Spacing"
+      }, {
+        "type": "text",
+        "id": "margin_top",
+        "label": "Margin Top",
+        "default": "0px"
+      }, {
+        "type": "text",
+        "id": "margin_bottom",
+        "label": "Margin Bottom",
+        "default": "0px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection_block",
+        "name": "Collection Block",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Blocks"
+      }
+    ]
+  }
+{% endschema %}

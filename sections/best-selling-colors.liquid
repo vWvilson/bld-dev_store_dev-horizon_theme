@@ -1,0 +1,519 @@
+{{ 'section-main.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .best-selling-colors {
+    margin-top: {{ section.settings.margin_top }};
+    margin-bottom: {{ section.settings.margin_bottom }};
+    padding: {{ section.settings.section_padding }};
+    background-color: {{ section.settings.background_color }};
+  }
+  .best-selling__title__pills {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin:40px 0;
+}
+  .best-selling-colors__header {
+    text-align: {{ section.settings.text_alignment }};
+    max-width: 720px;
+    
+  }
+  .best-selling-colors__heading {
+    margin: 0 0 0.75rem;
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+  }
+  .best-selling-colors__subheading {
+    margin: 0;
+    color: rgba(17, 17, 17, 0.75);
+  }
+  .best-selling-colors__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.pill_gap }}px;
+    justify-content: {{ section.settings.pill_alignment }};
+    width: fit-content;
+    border-radius: 999px;
+    border: 1px solid #BCBCBC;
+    padding: 6px 30px;
+  }
+  .best-selling-colors__pill {
+    position: relative;
+    border: 1px solid transparent;
+    background-color: var(--pill-bg, {{ section.settings.pill_background }});
+    color: var(--pill-color, {{ section.settings.pill_text_color }});
+    border-radius: 999px;
+    padding: 0.35rem 1.5rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: background-color 0.3s ease
+    , color 0.3s ease
+    , border-color 0.3s ease;
+  }
+
+  .best-selling-colors__pill.is-active {
+    background-color: {{ section.settings.pill_active_background }};
+    color: {{ section.settings.pill_active_text_color }};
+    border-color: {{ section.settings.pill_active_background }};
+  }
+   .best-selling-colors__pill.is-active:hover {
+    background-color: {{ section.settings.pill_active_background }};
+    color: {{ section.settings.pill_active_text_color }};
+    border-color: {{ section.settings.pill_active_background }};
+  }
+
+  .best-selling-colors__pill:hover {
+    background-color: var(--pill-bg, {{ section.settings.pill_background }});
+    color: var(--pill-color, {{ section.settings.pill_text_color }});
+    border-color: {{ section.settings.pill_active_background }};
+  }
+
+
+  .best-selling-colors__panel {
+    display: none;
+  }
+  .best-selling-colors__panel.is-active {
+    display: block;
+  }
+  .best-selling-colors__grid {
+    --cols: {{ section.settings.desktop_columns }};
+    --gap: {{ section.settings.product_gap }}px;
+    display: grid;
+    gap: var(--gap);
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  }
+  @media (max-width: 991px) {
+    .best-selling-colors__grid {
+      --cols: {{ section.settings.tablet_columns }};
+    }
+  }
+  @media (max-width: 639px) {
+    .best-selling-colors__grid {
+      --cols: {{ section.settings.mobile_columns }};
+    }
+  }
+  .best-selling-colors__empty {
+    padding: 1rem;
+    text-align: center;
+    color: rgba(17, 17, 17, 0.6);
+    border: 1px dashed rgba(17, 17, 17, 0.2);
+    border-radius: 8px;
+  }
+{%- endstyle -%}
+
+<section
+  class="best-selling-colors"
+  data-section-id="{{ section.id }}"
+  data-best-selling-colors="{{ section.id }}">
+  <div class="best-selling-colors__inner{% if section.settings.section_width == 'page' %} container{% endif %}">
+    {% comment %} start {% endcomment %}
+     <div class="best-selling__title__pills">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="best-selling-colors__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="best-selling-colors__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="best-selling-colors__subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div
+        class="best-selling-colors__pills"
+        role="tablist"
+        aria-label="{{ section.settings.heading | default: 'Best selling colors' }}">
+        {%- for block in section.blocks -%}
+          {%- assign tab_target = section.id | append: '-' | append: block.id -%}
+          <button
+            type="button"
+            class="best-selling-colors__pill{% if forloop.first %} is-active{% endif %}"
+            data-color-tab="{{ block.id }}"
+            id="pill-{{ tab_target }}"
+            role="tab"
+            aria-controls="panel-{{ tab_target }}"
+            aria-selected="{%- if forloop.first -%}true{%- else -%}false{%- endif -%}"
+            style="--pill-bg: {{ block.settings.pill_background | default: section.settings.pill_background }}; --pill-color: {{ block.settings.pill_text_color | default: section.settings.pill_text_color }};"
+            {{ block.shopify_attributes }}>
+            {{ block.settings.title | default: 'Color' }}
+          </button>
+        {%- endfor -%}
+      </div>
+      </div>
+{% comment %} end {% endcomment %}
+      <div class="best-selling-colors__panels">
+        {%- for block in section.blocks -%}
+          {%- assign tab_target = section.id | append: '-' | append: block.id -%}
+          {%- assign color_collection = collections[block.settings.collection] -%}
+          <div
+            class="best-selling-colors__panel{% if forloop.first %} is-active{% endif %}"
+            data-color-panel="{{ block.id }}"
+            id="panel-{{ tab_target }}"
+            role="tabpanel"
+            aria-labelledby="pill-{{ tab_target }}"
+            aria-hidden="{%- if forloop.first -%}false{%- else -%}true{%- endif -%}"
+            {{ block.shopify_attributes }}>
+            {%- if color_collection != blank and color_collection.all_products_count > 0 -%}
+              <div class="best-selling-colors__grid">
+                {%- assign view_mode = 'grid' -%}
+                {%- assign product_layout = section.settings.product_card_layout -%}
+                {%- assign layout_class = 'product-' | append: product_layout -%}
+                {%- assign pt_layout = product_layout -%}
+                {%- assign aspect_ratio = false -%}
+                {%- assign img_size = section.settings.image_size -%}
+                {%- assign space_product = section.settings.product_gap -%}
+                {%- assign limit = section.settings.products_per_tab -%}
+                {%- assign columns = section.settings.desktop_columns -%}
+                {%- assign image_width = img_size | split: 'x' | first -%}
+                {%- assign image_height = img_size | split: 'x' | last -%}
+                {%- if image_height == blank -%}
+                  {%- assign image_height = image_width -%}
+                {%- endif -%}
+                {%- if image_height == 0 or image_height == blank -%}
+                  {%- assign image_height = 1 -%}
+                {%- endif -%}
+                {%- if image_width == 0 or image_width == blank -%}
+                  {%- assign image_width = 1 -%}
+                {%- endif -%}
+                {%- if image_width > image_height -%}
+                  {%- assign ar = image_width | divided_by: image_height -%}
+                {%- else -%}
+                  {%- assign ar = image_height | divided_by: image_width -%}
+                {%- endif -%}
+                {%- capture image_size -%}{{ image_width }}x{{ image_height }}{%- endcapture -%}
+                {%- assign pt = 100 | divided_by: ar | append: '%' -%}
+
+                {%- for product in color_collection.products limit: section.settings.products_per_tab -%}
+                  {% include 'pt-product-loop' %}
+                {%- endfor -%}
+              </div>
+            {%- else -%}
+              <p class="best-selling-colors__empty">{{ 'sections.collection-template.empty' | t }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="best-selling-colors__empty">{{ 'sections.collection-template.empty' | t }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var sectionId = '{{ section.id }}';
+    function initBestSellingColorTabs() {
+      var wrapper = document.querySelector('[data-best-selling-colors="' + sectionId + '"]');
+      if (!wrapper || wrapper.dataset.tabsBound === 'true') {
+        return;
+      }
+      var buttons = wrapper.querySelectorAll('[data-color-tab]');
+      var panels = wrapper.querySelectorAll('[data-color-panel]');
+      if (!buttons.length || !panels.length) {
+        return;
+      }
+      wrapper.dataset.tabsBound = 'true';
+      buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          var target = button.getAttribute('data-color-tab');
+          buttons.forEach(function(btn) {
+            var isActive = btn === button;
+            btn.classList.toggle('is-active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          panels.forEach(function(panel) {
+            var matches = panel.getAttribute('data-color-panel') === target;
+            panel.classList.toggle('is-active', matches);
+            panel.setAttribute('aria-hidden', matches ? 'false' : 'true');
+          });
+        });
+      });
+    }
+    document.addEventListener('DOMContentLoaded', initBestSellingColorTabs);
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.detail && event.detail.sectionId === sectionId) {
+        initBestSellingColorTabs();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+  {
+    "name": "Best Selling Colors",
+    "tag": "section",
+    "class": "section-best-selling-colors",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Section width",
+        "default": "page",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full width"
+          }, {
+            "value": "page",
+            "label": "Page width"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Best Selling Colors"
+      },
+      {
+        "type": "textarea",
+        "id": "subheading",
+        "label": "Subheading",
+        "default": "Tap a color pill to see the top sellers from each palette."
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Heading alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          }, {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }, {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#f7f7f7"
+      }, {
+        "type": "text",
+        "id": "section_padding",
+        "label": "Section padding",
+        "default": "40px 0"
+      }, {
+        "type": "text",
+        "id": "margin_top",
+        "label": "Margin top",
+        "default": "0px"
+      }, {
+        "type": "text",
+        "id": "margin_bottom",
+        "label": "Margin bottom",
+        "default": "0px"
+      }, {
+        "type": "header",
+        "content": "Pill styling"
+      }, {
+        "type": "range",
+        "id": "pill_gap",
+        "label": "Spacing between pills",
+        "min": 4,
+        "max": 32,
+        "step": 2,
+        "default": 12,
+        "unit": "px"
+      }, {
+        "type": "select",
+        "id": "pill_alignment",
+        "label": "Pill alignment",
+        "default": "center",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Left"
+          }, {
+            "value": "center",
+            "label": "Center"
+          }, {
+            "value": "flex-end",
+            "label": "Right"
+          }
+        ]
+      }, {
+        "type": "color",
+        "id": "pill_background",
+        "label": "Default pill background",
+        "default": "#ffffff"
+      }, {
+        "type": "color",
+        "id": "pill_text_color",
+        "label": "Default pill text color",
+        "default": "#111111"
+      }, {
+        "type": "color",
+        "id": "pill_border_color",
+        "label": "Pill border color",
+        "default": "#d0d0d0"
+      }, {
+        "type": "color",
+        "id": "pill_active_background",
+        "label": "Active pill background",
+        "default": "#111111"
+      }, {
+        "type": "color",
+        "id": "pill_active_text_color",
+        "label": "Active pill text color",
+        "default": "#ffffff"
+      }, {
+        "type": "header",
+        "content": "Products"
+      }, {
+        "type": "range",
+        "id": "products_per_tab",
+        "label": "Products per color",
+        "min": 2,
+        "max": 5,
+        "step": 1,
+        "default": 5
+      }, {
+        "type": "select",
+        "id": "desktop_columns",
+        "label": "Desktop columns",
+        "default": "5",
+        "options": [
+          {
+            "value": "3",
+            "label": "3"
+          }, {
+            "value": "4",
+            "label": "4"
+          }, {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "tablet_columns",
+        "label": "Tablet columns",
+        "default": "3",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          }, {
+            "value": "3",
+            "label": "3"
+          }, {
+            "value": "4",
+            "label": "4"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "mobile_columns",
+        "label": "Mobile columns",
+        "default": "2",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          }, {
+            "value": "2",
+            "label": "2"
+          }
+        ]
+      }, {
+        "type": "range",
+        "id": "product_gap",
+        "label": "Product gap",
+        "min": 0,
+        "max": 40,
+        "step": 2,
+        "default": 20,
+        "unit": "px"
+      }, {
+        "type": "select",
+        "id": "product_card_layout",
+        "label": "Product card layout",
+        "default": "outimage_aq_onimage",
+        "options": [
+          {
+            "value": "outimage_aq_onimage",
+            "label": "Overlay image"
+          }, {
+            "value": "onimage",
+            "label": "Content over image"
+          }, {
+            "value": "onimage2",
+            "label": "Minimal"
+          }
+        ]
+      }, {
+        "type": "text",
+        "id": "image_size",
+        "label": "Image size (width x height)",
+        "default": "400x500"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "color_category",
+        "name": "Color category",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Pill label",
+            "default": "Black"
+          }, {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          }, {
+            "type": "color",
+            "id": "pill_background",
+            "label": "Custom pill background",
+            "default": "#ffffff"
+          }, {
+            "type": "color",
+            "id": "pill_text_color",
+            "label": "Custom pill text color",
+            "default": "#111111"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Best Selling Colors",
+        "blocks": [
+          {
+            "type": "color_category",
+            "settings": {
+              "title": "Black"
+            }
+          }, {
+            "type": "color_category",
+            "settings": {
+              "title": "Gray"
+            }
+          }, {
+            "type": "color_category",
+            "settings": {
+              "title": "White"
+            }
+          }, {
+            "type": "color_category",
+            "settings": {
+              "title": "Sale"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

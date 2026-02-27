@@ -1,0 +1,335 @@
+<div class="product-view product-page-area {% if settings.move_product_tab != blank %}moved-tab{% endif %}">
+  <div class="product-essential">
+    <div class="row">
+      <div class="product-img-box col-md-{{media_col}}">
+        <div class="product-img-list{% if settings.media_slide_layout == 'verticle' %} thumb-vertical{% endif %}">
+          {% include 'media' %}
+        </div>
+      </div>
+      <div class="product-shop col-md-{{main_col}}">
+        <div class="product-shop-wrapper">
+          {%- if settings.product_prev_next != blank -%}
+          <div class="prev-next-products">
+            {%- if collection -%}
+            {%- if collection.previous_product -%}
+            <div class="product-nav product-prev{% if collection.next_product == blank %} no-next{% endif %}">
+              <a href="{{ collection.previous_product }}" title="Previous Product">
+                {{ settings.product_prev_text }}
+              </a>
+              {%- assign words = collection.previous_product | split:'/' -%}
+              {%- assign word = words.last -%}
+              <div class="product-pop" data-with-product="{{word}}">
+                <script type="text/template">
+                  <img class="product-image lazyload" data-src="[img:medium]" alt="#title#"/>
+                  <h3 class="product-name">#title#</h3>
+                </script>
+              </div>
+            </div>
+            {%- endif -%}
+            {%- if collection.next_product -%}
+            <div class="product-nav product-next">
+              <a class="product-next" href="{{ collection.next_product }}" title="Next Product">
+                {{ settings.product_next_text }}
+              </a>
+              {%- assign words = collection.next_product | split:'/' -%}
+              {%- assign word = words.last -%}
+              <div class="product-pop" data-with-product="{{word}}">
+                <script type="text/template">
+                  <img class="product-image lazyload" data-src="[img:medium]" alt="#title#"/>
+                  <h3 class="product-name">#title#</h3>
+                </script>
+              </div>
+            </div>
+            {%- endif -%}
+            {%- endif -%}
+          </div>
+          {%- endif -%}
+          <div class="product-name top-product-detail">
+            <h1>
+              <a href="{{ product.url | within: collection }}"> 
+                {{ product.title }} 
+              </a>
+            </h1>
+          </div>
+          <div class="review-product-details">
+            <span class="prorw_preview_badge_setup" id="prorw_preview_badge_id_{{ product.id }}" data-product-id="{{ product.id }}" data-average-ratings="{% if product.metafields.proviews.averageRatings != blank %}{{product.metafields.proviews.averageRatings}}{% else %}0{% endif %}" data-count="{% if product.metafields.proviews.totalReviewCount != blank %}{{product.metafields.proviews.totalReviewCount}}{% else %}0{% endif %}"></span>
+            <!--<span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>-->
+          </div>
+          <div class="product-type-data">
+            <div class="price-box">
+              <div id="price" class="detail-price" itemprop="price">
+                {%- if variant_tmp.compare_at_price > variant_tmp.price -%}
+                <div class="old-price">{{ variant_tmp.compare_at_price | money }}</div>
+                <!--span class="price_percentage">-{{ variant_tmp.compare_at_price | minus: variant_tmp.price | times: 100.0 | divided_by: variant_tmp.compare_at_price | money_without_currency | times: 100 | remove: '.0'}}%</span-->
+                {%- endif -%}
+                {% if variant_tmp.price  == 0 %}
+                  <p></p>
+                {% else %}
+                <div class="price">{{ variant_tmp.price | money }}</div>
+                {% endif %}
+              </div>
+              <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
+    			{% if product.selected_or_first_available_variant.inventory_quantity <= 0 %}
+        			<p class="live-inventory-count icon-check" style="color: #f20; font-size: 0.9rem; margin-bottom: 0px; font-weight: 100;">Out of Stock</p>
+    			{% elsif product.selected_or_first_available_variant.inventory_quantity > 0 and product.selected_or_first_available_variant.inventory_quantity <= 10 %}
+        			<p class="live-inventory-count icon-check" style="color: #f20; font-size: 0.9rem; margin-bottom: 0px; font-weight: 100;">Hurry Up! Only <b>{{product.selected_or_first_available_variant.inventory_quantity}}</b> Left!</p>
+    			{% else %}
+        			<p class="live-inventory-count  icon-check" style="color: #f20; font-size: 0.9rem; margin-bottom: 0px; font-weight: 100;">We have <b>{{product.selected_or_first_available_variant.inventory_quantity}}</b> Available in Stock!</p>
+    			{% endif %}              
+       	    {%- if settings.product_vendor -%}
+                  {%- assign lead_time = product.metafields.product.lead_time | metafield_text -%}
+                {% if lead_time != blank and product.selected_or_first_available_variant.inventory_quantity > 0 %}
+				  <p style="color: #0078a9; font-size: 0.9rem; font-weight: 500;">Need More? Current Lead Time: {{ product.metafields.product.lead_time }}</p>
+                {% else %}
+					<p style="color: #0078a9; font-size: 0.9rem; font-weight: 500;">Lead Time: {{ product.metafields.product.lead_time }}</p>
+                {%- endif -%} 
+            {%- endif -%}
+              
+            {%- if product.available -%}             
+              <link itemprop="availability" href="http://schema.org/InStock" />
+              {%- else -%}
+              <link itemprop="availability" href="http://schema.org/OutOfStock" />
+            {%- endif -%}
+            </div>
+          </div> 
+          {% if product.description contains '[countdown]' %}
+          {% assign count_down_first = product.description | split:'[/countdown]' | first %}
+          {% assign count_down_final = count_down_first | split:'[countdown]' | last %}
+          <div class="bottom-product-dailydeal bottom-home-dailydeal">
+            <span class="title">{{'products.product.count_down' | t }} </span><div class="product-date" data-date="{{ count_down_final }}"></div>
+          </div>
+          {% endif %}
+          {%- if settings.product_short_desc != '0' -%}
+          <div class="short-description-detail">
+            <div class="short-description">
+              {%- assign description = product.description -%}
+              {%- if product.description contains '[shortdesc]' and settings.product_short_desc == '1' -%}
+              {%- assign last = description | split:'[shortdesc]' | last -%}
+              {%- assign description = last | split:'[/shortdesc]' | first -%}
+              {%- else -%}
+              {%- if product.description contains '[countdown]' -%}
+              {%- assign description = description | split:'[/countdown]' | last -%}
+              {%- endif -%}
+              {%- if product.description contains '[shortdesc]' -%}
+              {%- assign description = description | split:'[/shortdesc]' | last -%}
+              {%- endif -%}
+              {%- if product.description contains '[additional]' -%}
+              {%- assign description = description | split:'[/additional]' | last -%}
+              {%- endif -%}
+              {%- if settings.product_short_desc == '1' -%}
+              {%- assign description = description | strip_html | truncatewords: 30 -%}
+              {%- endif -%}
+              {%- endif -%} 
+              {{ description }} 
+            </div>
+          </div>
+          {%- endif -%}
+          {%- if settings.product_short_custom != blank -%}
+          <div class="porto-custom-block">
+            <div class="custom-block-bar"> 
+              {{ settings.custom_block_content_after | split: '[lang2]' | first }} 
+            </div>
+          </div>
+          {%- endif -%}
+          <div class="middle-product-detail">
+            {%- if settings.product_availability -%}
+            <div class="product-inventory">
+              <span>{{ 'products.product.availability' | t }} </span>
+              <span class="in-stock">
+                {%- if product.selected_or_first_available_variant.inventory_management -%}
+                {%- assign first_inventory = product.selected_or_first_available_variant.inventory_quantity -%}
+                {%- if first_inventory > 0 -%}
+                {{product.selected_or_first_available_variant.inventory_quantity}}
+                {%- else -%}
+                {{ 'products.product.out_of_stock' | t }}
+                {%- endif -%}
+                {%- else -%}
+                {{product.selected_or_first_available_variant.inventory_quantity}}
+                {%- endif -%}
+              </span>
+            </div>
+            {%- endif -%}
+            {%- if settings.product_sku -%}
+            {%- assign current_variant = product.selected_or_first_available_variant -%}
+            <div class="product-sku"><span>{{ 'products.product.sku' | t }} </span><span class="sku">{{ current_variant.sku }}</span></div>
+            {%- endif -%}
+            {%- assign current_variant = product.selected_or_first_available_variant -%}
+            {% if current_variant.metafields.product.customer_item_number !=blank  %}
+            <div class="customer_item_number"><span>Customer Part#: </span><span class="customer_item_number" style="font-weight: 700;color: #0078a9;">{{ current_variant.metafields.product.customer_item_number }}</span></div>
+            {% endif %}  
+            {%- if settings.product_category -%} 
+            <div class="product-category">
+              <span>{{ 'products.product.category' | t }}</span>
+              <span class="category-list">
+                {%- for collection in product.collections limit:4 -%}
+                {{ collection.title | link_to: collection.url }}{%- if forloop.last == false -%},&nbsp;{%- endif -%}
+                {%- endfor -%} 
+              </span>  
+            </div>
+            {%- endif -%}
+            {%- if settings.product_type -%}
+            <div class="product-type">
+              <span>{{ 'products.product.product_type' | t }} </span>
+              <span>{{ product.type }}</span>
+            </div>
+            {%- endif -%}
+            {%- if settings.product_vendor -%}
+            <div class="product-vendor">
+              <span>{{ 'products.product.product_vendor' | t }} </span>
+              <span>{{ product.vendor }}</span>
+            </div>
+            {%- endif -%} 
+            {%- if settings.product_tags -%}
+            <div class="tags">
+              <span class="icon-tags">{{ 'blogs.article.tags' | t }}:</span>
+              <span class="tags-list">
+                {%- for tag in product.tags -%} 
+                <a href="/collections/all/{{ tag | handle }}" rel="tag">{{ tag }}{%- if forloop.last == false -%},&nbsp;{%- endif -%}</a>
+                {%- endfor -%}
+              </span>
+            </div>
+            {%- endif -%}
+          </div>
+          <div class="product-type-main">
+            {%- form 'product', product, class:'product-form', id:'product-main-form' -%}
+            <div id="product-variants" class="product-options" {% if product.options.size == 1 and product.options.first == 'Title' %}style="display: none;"{% endif %}>
+              <select id="product-selectors" name="id" style="display: none;">
+                {%- for variant in product.variants -%}
+                {%- if variant.available -%}
+                <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">{{ variant.title }} - {{ variant.price | money_with_currency }}</option>
+                {%- else -%}
+                <option disabled="disabled">
+                  {{ variant.title }} - {{'products.product.sold_out' | t}}
+                </option>
+                {%- endif -%}
+                {%- endfor -%}
+              </select>
+            </div>
+            <div class="product-options-bottom">
+              <div class="add-to-cart-box">
+                <div class="input-box">
+                    {%  if min_quantity == blank %} {% assign min_quantity =1 %} {% endif %}
+                  <input type="text" id="qty" name="quantity" value="{{ min_quantity }}" min="{{ min_quantity }}" step="{{ min_quantity }}" class="quantity-selector">
+                    <div class="plus-minus">
+                    <div class="increase items" onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty )) result.value++;return false;">
+                      <i class="icon-up-dir"></i>
+                    </div>
+                    <div class="reduced items" onclick="var result = document.getElementById('qty'); var qty = result.value; if( !isNaN( qty) &amp;&amp; qty > {{ min_quantity }} ) result.value--;return false;">
+                      <i class="icon-down-dir"></i>
+                    </div>
+                  </div>
+                </div>                
+                <div class="actions">
+                  <div class="action-list addtocart">
+                    <div class="button-wrapper">
+                      <div id="custom-buy-button" class="button-wrapper-content" style="{%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%} display:block; {% else %} display:none; {% endif %}">
+                        <button type="submit" name="add" class="btn-cart add-to-cart bordered uppercase">
+                          <i class="icon-cart"></i>
+                          <span>{{ 'products.product.add_to_cart' | t }}</span>
+                        </button>
+                      </div>
+                      <div id="custom-contact-support-button" class="button-wrapper-content" style="{%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%} display:none; {% else %} display:block; {% endif %}">
+                        <!--<button href="javascript:;" class="btn-cart add-to-cart" disabled="disabled">-->
+                        <a href="/pages/contact" class="btn-cart bordered uppercase">
+                          <i class="icon-support"></i>
+                          <span class="money">{{ 'products.product.sold_out' | t }}</span></a>
+                      </div>
+                    </div>
+                  </div>
+                  {%- if settings.disable_addtolink == blank -%}
+                  <div class="action-list wishlist">
+                    {% include 'wishlist-item' %}
+                  </div>
+                  {%- endif -%}
+                </div>
+                {%- if settings.enable_payment_button -%}
+                {{ form | payment_button }}
+                {%- endif -%}
+              </div>
+            </div>
+            {%- endform -%}
+          </div> 
+          {%- if settings.disable_socical_icon == blank -%}
+          {% include 'sharelink' %}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- if settings.full_width_product_tab == blank -%}
+  <div class="product-collateral">
+    <div class="product-description rte" itemprop="description">
+      {% include 'product-page-tab-custom' %}
+    </div>
+  </div>
+  {%- endif -%}
+  <div id="prorw_core_reviews_container_data" class="prorw_core-reviews_container_data"></div>
+  <!-- Custom Code - Related Product Display -->      
+  {%- if settings.related_product_display -%}
+  {%- if settings.full_width_background_related == blank -%}
+  <div class="products-related">
+    <div class="products-collection porto-products">
+      {%- if settings.related_product_type == "tags" -%}
+      {% include 'related-products-by-tags' %}
+      {%- else -%}
+      {% include 'related-products' %}
+      {%- endif -%}
+    </div>
+  </div>
+  {%- endif -%}
+  {%- endif -%}
+</div>
+  <!-- Refresh Add to Cart upon Variant Selection - Show Inventory -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var customVariantObject = {};    
+        {% for var in product.variants %}
+        customVariantObject[{{- var.id -}}] = {
+          inventoryQuantity: {{ var.inventory_quantity | default: 0 }},
+          available: {{ var.available }}
+        };
+        {% endfor %}
+    
+        const variantSelectorElement = document.querySelector(".product-options");
+        const addToCartButton = document.getElementById('custom-buy-button');
+        const contactSupportButton = document.getElementById('custom-contact-support-button');
+        const liveInventoryCount = document.querySelector(".live-inventory-count");
+    
+        function updateAddToCartButton(variantId) {
+          const variant = customVariantObject[variantId];
+          if (variant.available && variant.inventoryQuantity > 0) {
+            addToCartButton.style.display = 'block';
+            contactSupportButton.style.display = 'none';
+          } else {
+            addToCartButton.style.display = 'none';
+            contactSupportButton.style.display = 'block';
+          }
+        }
+    
+        function updateInventoryCount(variantId) {
+          const variant = customVariantObject[variantId];
+          if (variant.inventoryQuantity <= 0) {
+            liveInventoryCount.innerHTML = "Out of Stock";
+          } else if (variant.inventoryQuantity > 0 && variant.inventoryQuantity <= 10) {
+            liveInventoryCount.innerHTML = `Hurry Up! Only <b>${variant.inventoryQuantity}</b> Left!`;
+          } else {
+            liveInventoryCount.innerHTML = `We have <b>${variant.inventoryQuantity}</b> Available in Stock!`;
+          }
+        }
+    
+        function handleVariantChange() {
+          const selectedVariantId = document.getElementById('product-selectors').value;
+          updateAddToCartButton(selectedVariantId);
+          updateInventoryCount(selectedVariantId);
+        }
+    
+        // Add event listener to variant selectors
+        var variantSelectors = document.querySelectorAll('#product-selectors, .variant-items input[type="radio"]');
+        variantSelectors.forEach(function(selector) {
+          selector.addEventListener('change', handleVariantChange);
+        });
+    
+        // Initial update
+        handleVariantChange();
+      });
+    </script>

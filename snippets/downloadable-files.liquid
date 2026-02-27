@@ -1,0 +1,13 @@
+ <div class="downloadable-file-wrapper">
+ {%assign custom_files = product.metafields.technical.data-sheet %}
+  {%if custom_files.size > 0 %}  
+   <h3>Downloadable links</h3>
+     <ul>
+       {% for file in custom_files %}
+        {% assign file_key = file | first %}
+        {% assign file_link = file | last %}
+       <li class="downloadable-file-item"><span>{{file_key}}: </span><a href="{{file_link}}" target="_blank"><span class="downloadable-file-value"></span></a> </li>
+       {% endfor %}
+     </ul>
+  {%endif%}
+  </div>

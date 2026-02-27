@@ -1,0 +1,244 @@
+<div tabindex="-1" role="dialog" id="compareBox" class="modal fade">
+  <div role="document" class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"><span class="brackets">{{ 'compare_list.general.compare' | t }}</span><span id="compareCount"></span></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <div id="compareAlert"></div>
+        <div id="compareTableList">
+          <table class="data-table cart-table">
+            <tbody>
+              <tr>
+                <td><span class="brackets">{{ 'compare_list.general.features' | t }}</span></td>
+              </tr>
+              <tr>
+                <td><span class="brackets">{{ 'products.product.availability' | t }}</span></td>
+              </tr>
+              <tr>
+                <td><span class="brackets">{{ 'compare_list.general.price' | t }}</span></td>
+              </tr>
+              <tr>
+                <td><span class="brackets">{{ 'compare_list.general.options' | t }}</span></td>
+              </tr>
+              <tr>
+                <td><span class="brackets">{{ 'compare_list.general.actions' | t }}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+$('#compareBox').on('show.bs.modal', function () {  
+  var handles = getCookie("compareItems");
+  if (handles !== "") {
+    var compareArr = [];
+    var deleteButtons = document.querySelectorAll('.btn-delete-compare');
+    deleteButtons.forEach(function (button) {
+      var productHandle = button.getAttribute('data-product-handle');
+      if (productHandle) {
+        compareArr.push(productHandle);
+      }
+    });
+
+    var fetchPromises = [];
+    var uniqueColumnLabels = new Set(); // Create a Set to store unique values
+    var data = {};
+    var columnMap = {}; // Map product handles to column indexes
+    
+    compareArr.forEach((handle, columnIndex) => {
+      var productUrl = `https://ppgaerospacestore.com/products/${handle}`;
+      fetchPromises.push(
+        fetch(productUrl)
+          .then((response) => response.text())
+          .then((html) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const tableflowContainers = doc.querySelectorAll('.tableFlowContainer .table-div.loc_1');
+            const liveInventoryCount = doc.querySelector('.live-inventory-count');
+
+            // Use the live count, product.availability is not accurate
+            document.querySelector('.compare-item-'+(columnIndex+1)+' .product-shop-stock-avai').innerHTML = liveInventoryCount.innerHTML;
+            if (liveInventoryCount.innerHTML == "Out of Stock") {
+              document.querySelector('.compare-item-'+(columnIndex+1)+' .add-cart-compare').innerHTML = "CONTACT CUSTOMER SERVICE";
+              document.querySelector('.compare-item-'+(columnIndex+1)+' .add-cart-compare').setAttribute('href', '/pages/contact');
+            }
+            
+            // Extract data from each tableFlowContainer
+            tableflowContainers.forEach((container) => {
+              var rows = container.querySelectorAll('tr');
+              var rowData = {};
+
+              rows.forEach((row) => {
+                var columns = row.querySelectorAll('td.value');
+                if (columns.length === 2) {
+                  var columnLabel = columns[0].innerHTML;
+                  var columnValue = columns[1].innerHTML;
+                  rowData[columnLabel] = columnValue;
+                  uniqueColumnLabels.add(columnLabel);
+                }
+              });
+
+              // Add the extracted data to the data object with the corresponding handle
+              data[handle] = rowData;
+            });
+
+            // Map the handle to the current column index
+            columnMap[handle] = columnIndex;
+          })
+          .catch((error) => {
+            console.error(`Error fetching or parsing product URL ${productUrl}:`, error);
+          })
+      );
+    });
+
+    Promise.all(fetchPromises)
+      .then(() => {
+        // Delete all custom row
+        var customRows = document.querySelectorAll('tr.custom-row');
+        customRows.forEach(function(row) {
+          row.remove();
+        });
+        
+        // Append table rows based on unique column labels
+        var compareTableList = document.getElementById('compareTableList').querySelector('tbody');
+        Array.from(uniqueColumnLabels).forEach((label) => {
+          var row = document.createElement('tr');
+          row.classList.add('custom-row');
+          var labelCell = document.createElement('td');
+          labelCell.innerHTML = label;
+          row.appendChild(labelCell);
+
+          compareArr.forEach((handle, index) => {
+            var valueCell = document.createElement('td');
+            valueCell.classList.add('compare-item-'+(index+1));
+            var columnIndex = columnMap[handle];
+            if (data[handle] && data[handle][label]) {
+              valueCell.innerHTML = data[handle][label] || ''; // Set cell value if available in data
+            } else {
+              valueCell.innerHTML = '';
+            }
+            row.appendChild(valueCell);
+          });
+
+          compareTableList.appendChild(row);
+        });
+
+        var tdElements = document.querySelectorAll('#compareTableList td');
+        tdElements.forEach(function(tdElement) {
+          var variantPlaceholders = tdElement.querySelectorAll('.variant-placeholder');
+          // Show first variant
+          if (variantPlaceholders.length > 0) {
+            variantPlaceholders[0].style.display = 'block';
+          }
+        });
+    
+        document.querySelectorAll('#compareTableList td .metafield-multi_line_text_field').forEach(function (el) {
+            if (el.innerHTML) {
+                var value = el.innerHTML;
+                var txt = document.createElement("textarea");
+                txt.innerHTML = value;
+                el.innerHTML = txt.value;
+            }
+        });
+    
+        // Get the table element with the id "compareTableList"
+        var table = document.querySelector('#compareTableList table');
+        
+        // Get all rows in the table's body
+        var rows = table.tBodies[0].rows;
+        
+        // Iterate through the rows in reverse order (to avoid issues with row removal)
+        for (var i = rows.length - 1; i >= 0; i--) {
+          var row = rows[i];
+          var cells = row.cells;
+        
+          // Check if there are no values other than the first column
+          var isEmpty = true;
+          for (var j = 1; j < cells.length; j++) {
+            if (cells[j].textContent.trim() !== "") {
+              isEmpty = false;
+              break;
+            }
+          }
+        
+          // If the row is empty, remove it
+          if (isEmpty) {
+            row.remove();
+          }
+        }
+                
+        // Get all select elements with the class single-option-selector-wishlist
+        const selects = document.querySelectorAll('#compareTableList .single-option-selector-wishlist');
+        
+        // Add a change event listener to each select element
+        selects.forEach((select) => {
+          select.addEventListener('change', handleSelectChange);
+        });
+        
+        // Trigger the change event on page load to initialize visibility
+        selects.forEach((select) => {
+          handleSelectChange({ target: select });
+        });
+        
+      })
+      .catch((error) => {
+        console.error('Error while fetching product URLs:', error);
+      });
+  }
+});
+
+
+function handleSelectChange(event) {
+  const select = event.target;
+  const selectedValue = select.value;
+  // Find the corresponding variant-placeholder elements and set their display
+  const idInput = select.closest('form').querySelector('input[name="id"]');
+  if (!idInput) return;
+  
+  const variantId = idInput.value;
+  const variantPlaceholders = document.querySelectorAll(`#compareTableList .variant-placeholder.variant-id-${variantId}`);
+  
+  if (variantPlaceholders.length > 0) {
+    if (selectedValue === '') {
+      // If no option is selected, hide the variant-placeholders and show others
+      variantPlaceholders.forEach((placeholder) => {
+        placeholder.style.display = 'none';
+        showOtherVariantPlaceholders(placeholder.parentElement);
+      });
+    } else {
+      // If an option is selected, show the variant-placeholders and hide others
+      variantPlaceholders.forEach((placeholder) => {
+        placeholder.style.display = 'block';
+        hideOtherVariantPlaceholders(placeholder.parentElement, variantId);
+      });
+    }
+  }
+}
+
+
+// Function to show other variant placeholders in the same <td>
+function showOtherVariantPlaceholders(tdElement) {
+  const variantPlaceholders = tdElement.querySelectorAll('.variant-placeholder');
+  variantPlaceholders.forEach((placeholder) => {
+    placeholder.style.display = 'block';
+  });
+}
+
+// Function to hide other variant placeholders in the same <td> except the one with the specified variant ID
+function hideOtherVariantPlaceholders(tdElement, exceptVariantId) {
+  const variantPlaceholders = tdElement.querySelectorAll('.variant-placeholder');
+  variantPlaceholders.forEach((placeholder) => {
+    const variantId = placeholder.classList[1].replace('variant-id-', ''); // Extract variant ID from class
+    if (variantId !== exceptVariantId) {
+      placeholder.style.display = 'none';
+    }
+  });
+}
+</script>

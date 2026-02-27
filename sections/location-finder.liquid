@@ -1,0 +1,146 @@
+<div class="page-width">
+  <div id="asc-location-finder-root" class="location-finder-container py-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-2xl font-bold mb-6">ASC Location Finder</h1>
+      
+      <div class="mb-8">
+        <label class="block text-sm font-medium mb-2" for="country-select">
+          Select Country
+        </label>
+        <select 
+          id="country-select"
+          class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">Select a country...</option>
+        </select>
+      </div>
+
+      <div id="location-info" class="hidden space-y-6">
+        <h2 id="location-title" class="text-xl font-semibold text-gray-800"></h2>
+        <div id="locations-container" class="space-y-6">
+          <!-- Location cards will be inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .location-finder-container {
+    padding: 1.5rem;
+    display: flex;
+  }
+  .location-finder-container select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: white;
+  }
+  .location-finder-container select:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+  .location-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  #location-info.hidden {
+    display: none;
+  }
+{% endstyle %}
+
+<script src="{{ 'asc-data.js' | asset_url }}" defer></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const countrySelect = document.getElementById('country-select');
+    const locationInfo = document.getElementById('location-info');
+    const locationTitle = document.getElementById('location-title');
+    const locationsContainer = document.getElementById('locations-container');
+
+    // Populate the dropdown
+    const countries = Object.keys(countryMappings).sort();
+    countries.forEach(country => {
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = country;
+      countrySelect.appendChild(option);
+    });
+
+    // Create a location card
+    function createLocationCard(locationName, locationData) {
+      return `
+        <div class="location-card">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">${locationName}</h3>
+          <div class="space-y-3">
+            <div>
+              <h4 class="font-medium text-gray-700">Address:</h4>
+              <p class="text-gray-600">${locationData.address}</p>
+            </div>
+            <div>
+              <h4 class="font-medium text-gray-700">Contact:</h4>
+              <p class="text-gray-600">${locationData.contact}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Handle selection change
+    countrySelect.addEventListener('change', function(event) {
+      const country = event.target.value;
+      if (!country) {
+        locationInfo.classList.add('hidden');
+        return;
+      }
+
+      const ascLocationsForCountry = countryMappings[country];
+      if (ascLocationsForCountry) {
+        locationTitle.textContent = `ASC Information for ${country}`;
+        
+        // Clear previous locations
+        locationsContainer.innerHTML = '';
+        
+        // Handle both single location and multiple locations
+        const locations = Array.isArray(ascLocationsForCountry) 
+          ? ascLocationsForCountry 
+          : [ascLocationsForCountry];
+        
+        // Create cards for each location
+        locations.forEach(locationName => {
+          if (ascLocations[locationName]) {
+            const locationCard = createLocationCard(locationName, ascLocations[locationName]);
+            locationsContainer.innerHTML += locationCard;
+          }
+        });
+        
+        locationInfo.classList.remove('hidden');
+      } else {
+        locationInfo.classList.add('hidden');
+      }
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "ASC Location Finder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "ASC Location Finder"
+    }
+  ],
+  "presets": [
+    {
+      "name": "ASC Location Finder",
+      "category": "Custom Content"
+    }
+  ]
+}
+{% endschema %}
