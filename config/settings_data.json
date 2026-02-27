@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
     "color_schemes": {
@@ -1074,7 +1083,10 @@
           },
           "1521143403132": {
             "type": "menu_item",
-            "settings": { "title": "My Account", "button_link": "/account" }
+            "settings": {
+              "title": "My Account",
+              "button_link": "/account"
+            }
           },
           "1521143416189": {
             "type": "menu_item",
@@ -1086,15 +1098,22 @@
           },
           "1521143430837": {
             "type": "menu_wishlist",
-            "settings": { "title": "My Wishlist" }
+            "settings": {
+              "title": "My Wishlist"
+            }
           },
           "1597801894588": {
             "type": "menu_item",
-            "settings": { "title": "Cart", "button_link": "/cart" }
+            "settings": {
+              "title": "Cart",
+              "button_link": "/cart"
+            }
           },
           "1521143443349": {
             "type": "menu_login",
-            "settings": { "title": "Login" }
+            "settings": {
+              "title": "Login"
+            }
           }
         },
         "block_order": [
@@ -1109,22 +1128,31 @@
       },
       "search-by-category": {
         "type": "search-by-category",
-        "settings": { "select_collection": "1" }
+        "settings": {
+          "select_collection": "1"
+        }
       },
       "product-page-tab": {
         "type": "product-page-tab",
         "blocks": {
           "1521493659625": {
             "type": "description",
-            "settings": { "title": "Description" }
+            "settings": {
+              "title": "Description"
+            }
           },
           "1521493661763": {
             "type": "review",
-            "settings": { "title": "Reviews", "use_count_reviews": true }
+            "settings": {
+              "title": "Reviews",
+              "use_count_reviews": true
+            }
           },
           "1521493664241": {
             "type": "additional",
-            "settings": { "title": "Additional Information" }
+            "settings": {
+              "title": "Additional Information"
+            }
           },
           "1521493666107": {
             "type": "size_chart",
@@ -1161,7 +1189,10 @@
               "show_count": true
             }
           },
-          "1585297446488": { "type": "filter", "settings": {} },
+          "1585297446488": {
+            "type": "filter",
+            "settings": {}
+          },
           "1585297450358": {
             "type": "products",
             "settings": {
@@ -1184,7 +1215,9 @@
           "1585297450358",
           "1585297453679"
         ],
-        "settings": { "sidebar_style": "1" }
+        "settings": {
+          "sidebar_style": "1"
+        }
       },
       "sidebar-right": {
         "type": "sidebar-right",
@@ -1215,7 +1248,11 @@
             }
           }
         },
-        "block_order": ["1585297495240", "1585297498360", "1585297503428"],
+        "block_order": [
+          "1585297495240",
+          "1585297498360",
+          "1585297503428"
+        ],
         "settings": {}
       },
       "header-notice": {
@@ -1232,8 +1269,13 @@
             }
           }
         },
-        "block_order": ["1596513555823"],
-        "settings": { "show_button": true, "expires": "1" }
+        "block_order": [
+          "1596513555823"
+        ],
+        "settings": {
+          "show_button": true,
+          "expires": "1"
+        }
       },
       "shortcode-pr": {
         "type": "shortcode-pr",
@@ -1296,7 +1338,9 @@
             }
           }
         },
-        "block_order": ["1597311639179"],
+        "block_order": [
+          "1597311639179"
+        ],
         "settings": {
           "title": "Shortcode Collection",
           "title_border_style": "border-bottom",
@@ -1383,7 +1427,10 @@
             }
           }
         },
-        "block_order": ["1597047213133", "slideshow_mpmYcr"],
+        "block_order": [
+          "1597047213133",
+          "slideshow_mpmYcr"
+        ],
         "settings": {
           "margin_top": "20px",
           "margin_bottom": "0px",
@@ -1396,12 +1443,42 @@
       "shortcode-brands": {
         "type": "shortcode-brands",
         "blocks": {
-          "1597366181970": { "type": "image", "settings": { "link": "#" } },
-          "1597366187689": { "type": "image", "settings": { "link": "#" } },
-          "1597366196384": { "type": "image", "settings": { "link": "#" } },
-          "1597366198856": { "type": "image", "settings": { "link": "#" } },
-          "1597366200946": { "type": "image", "settings": { "link": "#" } },
-          "1597366203311": { "type": "image", "settings": { "link": "#" } }
+          "1597366181970": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          },
+          "1597366187689": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          },
+          "1597366196384": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          },
+          "1597366198856": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          },
+          "1597366200946": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          },
+          "1597366203311": {
+            "type": "image",
+            "settings": {
+              "link": "#"
+            }
+          }
         },
         "block_order": [
           "1597366181970",
@@ -1431,15 +1508,22 @@
         "blocks": {
           "9de4f9a3-73f2-4a30-9d5f-da2d7a41841a": {
             "type": "menu_account",
-            "settings": { "title": "Account" }
+            "settings": {
+              "title": "Account"
+            }
           },
           "aab3ffea-e44f-4046-98c1-f1d9ed491fd5": {
             "type": "menu_cart",
-            "settings": { "title": "Cart", "icon": "icon-shopping-cart" }
+            "settings": {
+              "title": "Cart",
+              "icon": "icon-shopping-cart"
+            }
           },
           "b5e22ef9-7e50-46cf-83ca-6d5f7163b0ed": {
             "type": "menu_wishlist",
-            "settings": { "title": "My Wishlist" }
+            "settings": {
+              "title": "My Wishlist"
+            }
           }
         },
         "block_order": [
@@ -1447,7 +1531,9 @@
           "aab3ffea-e44f-4046-98c1-f1d9ed491fd5",
           "b5e22ef9-7e50-46cf-83ca-6d5f7163b0ed"
         ],
-        "settings": { "enable": true }
+        "settings": {
+          "enable": true
+        }
       },
       "16431579973a541719": {
         "type": "section-html",
@@ -1459,11 +1545,16 @@
       },
       "shortcode-find-products": {
         "type": "shortcode-find-products",
-        "settings": { "title": "FIND A PRODUCT" }
+        "settings": {
+          "title": "FIND A PRODUCT"
+        }
       },
       "shortcode-article-widget": {
         "type": "shortcode-article-widget",
-        "settings": { "blog": "", "limit": "4" }
+        "settings": {
+          "blog": "",
+          "limit": "4"
+        }
       },
       "shortcode-testimonials": {
         "type": "shortcode-testimonials",
@@ -1658,14 +1749,20 @@
       },
       "faq-page-order": {
         "type": "faq-page-order",
-        "settings": { "title": "ORDERS AND RETURNS", "faq_order_enable": true }
+        "settings": {
+          "title": "ORDERS AND RETURNS",
+          "faq_order_enable": true
+        }
       },
       "16433956514ae25e2a": {
         "type": "products-filter-tab",
         "blocks": {
           "16433956514ae25e2a-0": {
             "type": "collection",
-            "settings": { "title": "", "collection": "best-sellers" }
+            "settings": {
+              "title": "",
+              "collection": "best-sellers"
+            }
           },
           "collection_V7pPM6": {
             "type": "collection",
@@ -1678,7 +1775,10 @@
           "b6c41f09-521c-4ec6-a091-23c53c091ab7": {
             "type": "collection",
             "disabled": true,
-            "settings": { "title": "Semco Products", "collection": "semco" }
+            "settings": {
+              "title": "Semco Products",
+              "collection": "semco"
+            }
           },
           "collection_8yEDDL": {
             "type": "collection",
@@ -1764,7 +1864,9 @@
       "section_main_gBYCrp"
     ]
   },
-  "presets": { "Default": {} },
+  "presets": {
+    "Default": {}
+  },
   "platform_customizations": {
     "custom_css": [
       "/* Tax Exempt - Desktop screens */@media screen and (min-width: 1024px) {.en-tx--container-inner {width: 50%; margin-left: auto; margin-right: auto; }}",
