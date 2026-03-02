@@ -600,7 +600,7 @@ html .background-color-light{background:#fff;}
 .header-container .header-right-area .inner-item > li{display:inline-block;}
 .header-container .header-right-area .inner-item > li:last-child{margin-right:0;}
 .header-container .cart-area{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-order:10;order:10;}
-.header-container .main-nav{padding:0;border:0;background-color:transparent;font-size:12px;text-align:left;}
+.header-container .main-nav{padding:0;border:0;background-color:white;font-size:12px;text-align:left;}
 .header-container .main-nav .logo_sticky{display:none;}
 .header-container .main-nav .main-top-nav .mini-cart{display:none;}
 .header-container.header-overlap:not(.sticky-header){position:absolute;width:100%;background-color:rgba(0, 0, 0, 0.1);z-index:9;}
