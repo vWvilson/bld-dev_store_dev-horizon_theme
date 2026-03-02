@@ -20,17 +20,19 @@
   .collection-block {
     display: flex;
     align-items: center;
-    flex: 1;
+    justify-content: space-between;
     background-color: #fff;
     min-width: 250px;
     max-width: 360px;
     border: 1px solid #DADADA;
+    overflow: hidden;
   }
   .collection-block__image {
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 45%;
     height: auto;
     padding: 7px;
-    max-width: 200px;
   }
   .collection-block-container {
     padding: 30px;
@@ -58,6 +60,25 @@
   }
   .collection-block__link:hover {
     opacity: 0.85;
+  }
+  .collection-blocks-cta {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .collection-blocks-cta__button {
+    display: inline-block;
+    padding: 14px 32px;
+    background-color: {{ section.settings.cta_bg_color }};
+    color: {{ section.settings.cta_text_color }};
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: opacity 0.3s ease;
+  }
+  .collection-blocks-cta__button:hover {
+    opacity: 0.8;
   }
   @media screen and (max-width: 768px) {
     .collection-block {
@@ -106,6 +127,14 @@
         {%- endcase -%}
       {%- endfor -%}
     </div>
+
+    {%- if section.settings.cta_url != blank -%}
+      <div class="collection-blocks-cta container">
+        <a href="{{ section.settings.cta_url }}" class="collection-blocks-cta__button">
+          View the Full Catalog
+        </a>
+      </div>
+    {%- endif -%}
   {%- endif -%}
 </section>
 
@@ -169,6 +198,23 @@
       }, {
         "type": "color",
         "id": "button_text_color",
+        "label": "Button Text Color",
+        "default": "#ffffff"
+      }, {
+        "type": "header",
+        "content": "Catalog Button"
+      }, {
+        "type": "url",
+        "id": "cta_url",
+        "label": "Button URL"
+      }, {
+        "type": "color",
+        "id": "cta_bg_color",
+        "label": "Button Background",
+        "default": "#000000"
+      }, {
+        "type": "color",
+        "id": "cta_text_color",
         "label": "Button Text Color",
         "default": "#ffffff"
       }, {
