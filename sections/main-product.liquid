@@ -305,30 +305,6 @@
       </div>
     </div>
     {% endif %}
-    {% if settings.related_product_display %}
-    {% if settings.full_width_background_related != blank %}
-    <div class="full-width products-related">
-      <div class="container">
-        <div class="box_product_related products-collection porto-products">
-          {% if settings.related_product_type == "tags" %}
-          {% include 'related-products-by-tags' %}
-          {% else %}
-          {% include 'related-products' %}
-          {% endif %}
-        </div>
-        <style>
-          .main-container .main-wrapper {
-            padding-top: 0;
-            padding-bottom: 0;
-          }
-          .main-container {
-            padding-bottom: 0;
-          }
-        </style>
-      </div>
-    </div>
-    {% endif %}
-    {% endif %}
     {% if settings.full_width_product_tab != blank and settings.move_down_product_tab_related != blank and settings.product_page_type == 'default' %}
     <div class="product-view">
       <div class="product-collateral">

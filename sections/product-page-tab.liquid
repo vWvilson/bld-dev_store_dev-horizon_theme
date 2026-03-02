@@ -1,119 +1,110 @@
 {%- if section.blocks.size > 0 -%}
-<div class="product-tabs horizontal">
-  <ul class="nav level0">
-    {%- for block in section.blocks -%}
-    {%- case block.type -%}
-    {%- when 'description' -%}
-    <li class="description_tab level0">
-      <a class="level0 nav-link {% if forloop.first %}active{% endif %}" href="#product_tabs_description" role="tab" data-toggle="tab" aria-selected="true" aria-control="product_tabs_description">
-        {{ block.settings.title }}
-      </a>
-    </li>
-    {%- when 'review' -%}
-    <li class="reviews_tab level0">
-      <a class="level0 nav-link {% if forloop.first %}active{% endif %}" href="#product_tabs_tabreviews" role="tab" data-toggle="tab" aria-selected="false" aria-control="product_tabs_tabreviews">
-        {{ block.settings.title }} 
-        {%- if block.settings.use_count_reviews -%} 
-        <script type="text/javascript">
-          $(function(){
-            if($('meta[itemprop=reviewCount]').length > 0) {
-              var revcount = '('+ $('meta[itemprop=reviewCount]').attr("content")+')';
-            }else {
-              var revcount = '(0)';
-            } 
-            $('.reviews_tab > a').append(revcount);
-          });
-        </script>
-        {%- endif -%} 
-      </a>
-    </li>
-    {%- when 'additional' -%}
-    {%- if product.description contains '[additional]' -%}
-    <li class="additional_tab level0">
-      <a class="level0 nav-link {% if forloop.first %}active{% endif %}" href="#product_tabs_additional" role="tab" data-toggle="tab" aria-selected="false" aria-control="product_tabs_additional">
-        {{ block.settings.title }} 
-      </a>
-    </li>
-    {%- endif -%}
-    {%- when 'size_chart' -%}
-    {%- if block.settings.size_chart_image != blank or block.settings.code != '' -%}
-    <li class="size_chart_tab level0">
-      <a class="level0 nav-link {% if forloop.first %}active{% endif %}" href="#product_tabs_size_chart" role="tab" data-toggle="tab" aria-selected="false" aria-control="product_tabs_size_chart">
-        {{ block.settings.title }} 
-      </a>
-    </li>
-    {%- endif -%}
-    {%- when 'html' -%}
-    {%- if block.settings.code != '' -%}
-    <li class="html_tab level0">
-      <a class="level0 nav-link {% if forloop.first %}active{% endif %}" href="#tab{{block.id}}" role="tab" data-toggle="tab" aria-selected="false" aria-control="tab{{block.id}}">
-        {{ block.settings.title }} 
-      </a>
-    </li>
-    {%- endif -%}
-    {%- endcase -%}
-    {%- endfor -%}
-  </ul>
+<div class="product-tabs accordion">
   {%- for block in section.blocks -%}
   {%- case block.type -%}
+
   {%- when 'description' -%}
-  <div class="tab-content fade{% if forloop.first %} show active{% endif %}{% if settings.product_tab_style != 'sticky' %} collapse{% endif %}" id="product_tabs_description">
-    <div class="product-tabs-content-inner clearfix">
-      {%- assign description = product.description -%}
-      {%- if description contains '[countdown]' -%}
-      {%- assign description = description | split:'[/countdown]' | last -%}
-      {%- endif -%}
-      {%- if product.description contains '[shortdesc]' -%}
-      {%- assign description = description | split:'[/shortdesc]' | last -%}
-      {%- endif -%}
-      {%- if product.description contains '[additional]' -%}
-      {%- assign description = description | split:'[/additional]' | last -%}
-      {%- endif -%} 
-      {{ description }} 
+  <div class="accordion-item" {{ block.shopify_attributes }}>
+    <button class="accordion-toggle nav-link{% if forloop.first %} active{% endif %}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="product_tabs_description">
+      {{ block.settings.title }}
+      <span class="accordion-icon"></span>
+    </button>
+    <div class="tab-content{% if forloop.first %} show active{% endif %}" id="product_tabs_description">
+      <div class="product-tabs-content-inner clearfix">
+        {%- assign description = product.description -%}
+        {%- if description contains '[countdown]' -%}
+        {%- assign description = description | split:'[/countdown]' | last -%}
+        {%- endif -%}
+        {%- if product.description contains '[shortdesc]' -%}
+        {%- assign description = description | split:'[/shortdesc]' | last -%}
+        {%- endif -%}
+        {%- if product.description contains '[additional]' -%}
+        {%- assign description = description | split:'[/additional]' | last -%}
+        {%- endif -%}
+        {{ description }}
+      </div>
     </div>
   </div>
+
   {%- when 'review' -%}
-  <div class="tab-content{% if forloop.first %} show active{% endif %}{% if settings.product_tab_style != 'sticky' %} fade collapse{% endif %}" id="product_tabs_tabreviews">
-    <div class="product-tabs-content-inner clearfix">
-      <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+  <div class="accordion-item reviews_tab" {{ block.shopify_attributes }}>
+    <button class="accordion-toggle nav-link{% if forloop.first %} active{% endif %}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="product_tabs_tabreviews">
+      {{ block.settings.title }}
+      {%- if block.settings.use_count_reviews -%}
+      <script type="text/javascript">
+        $(function(){
+          var revcount = $('meta[itemprop=reviewCount]').length > 0
+            ? '(' + $('meta[itemprop=reviewCount]').attr('content') + ')'
+            : '(0)';
+          $('.reviews_tab .accordion-toggle').append(revcount);
+        });
+      </script>
+      {%- endif -%}
+      <span class="accordion-icon"></span>
+    </button>
+    <div class="tab-content{% if forloop.first %} show active{% endif %}" id="product_tabs_tabreviews">
+      <div class="product-tabs-content-inner clearfix">
+        <div id="shopify-product-reviews" data-id="{{ product.id }}">{{ product.metafields.spr.reviews }}</div>
+      </div>
     </div>
   </div>
+
   {%- when 'additional' -%}
   {%- if product.description contains '[additional]' -%}
-  <div class="tab-content fade{% if forloop.first %} show active{% endif %}{% if settings.product_tab_style != 'sticky' %} fade collapse{% endif %}" id="product_tabs_additional">
-    <div class="product-tabs-content-inner clearfix">
-      {%- if product.description contains '[additional]' -%}
+  <div class="accordion-item" {{ block.shopify_attributes }}>
+    <button class="accordion-toggle nav-link{% if forloop.first %} active{% endif %}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="product_tabs_additional">
+      {{ block.settings.title }}
+      <span class="accordion-icon"></span>
+    </button>
+    <div class="tab-content{% if forloop.first %} show active{% endif %}" id="product_tabs_additional">
+      <div class="product-tabs-content-inner clearfix">
         {%- assign get = product.description | split:'[/additional]' | first -%}
-        {%- assign additional = get | split:'[additional]' | last -%} 
-        {{ additional }} 
-      {%- endif -%}
+        {%- assign additional = get | split:'[additional]' | last -%}
+        {{ additional }}
+      </div>
     </div>
   </div>
   {%- endif -%}
+
   {%- when 'size_chart' -%}
   {%- if block.settings.size_chart_image != blank or block.settings.code != '' -%}
-  <div class="tab-content fade{% if forloop.first %} show active{% endif %}{% if settings.product_tab_style != 'sticky' %} fade collapse{% endif %}" id="product_tabs_size_chart">
-    <div class="product-tabs-content-inner clearfix">
-      {%- if block.settings.size_chart_image != blank -%}
-        <img data-src="{{ block.settings.size_chart_image | img_url: 'master' }}" class="img-responsive" />
-      {%- else -%} 
-        {{ block.settings.code }} 
-      {%- endif -%}
+  <div class="accordion-item" {{ block.shopify_attributes }}>
+    <button class="accordion-toggle nav-link{% if forloop.first %} active{% endif %}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="product_tabs_size_chart">
+      {{ block.settings.title }}
+      <span class="accordion-icon"></span>
+    </button>
+    <div class="tab-content{% if forloop.first %} show active{% endif %}" id="product_tabs_size_chart">
+      <div class="product-tabs-content-inner clearfix">
+        {%- if block.settings.size_chart_image != blank -%}
+          <img data-src="{{ block.settings.size_chart_image | img_url: 'master' }}" class="img-responsive" />
+        {%- else -%}
+          {{ block.settings.code }}
+        {%- endif -%}
+      </div>
     </div>
   </div>
   {%- endif -%}
+
   {%- when 'html' -%}
   {%- if block.settings.code != '' -%}
-  <div class="tab-content fade{% if forloop.first %} show active{% endif %}{% if settings.product_tab_style != 'sticky' %} fade collapse{% endif %}" id="tab{{block.id}}">
-    <div class="product-tabs-content-inner clearfix"> 
-      {{ block.settings.code }} 
+  <div class="accordion-item" {{ block.shopify_attributes }}>
+    <button class="accordion-toggle nav-link{% if forloop.first %} active{% endif %}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="tab{{ block.id }}">
+      {{ block.settings.title }}
+      <span class="accordion-icon"></span>
+    </button>
+    <div class="tab-content{% if forloop.first %} show active{% endif %}" id="tab{{ block.id }}">
+      <div class="product-tabs-content-inner clearfix">
+        {{ block.settings.code }}
+      </div>
     </div>
   </div>
   {%- endif -%}
+
   {%- endcase -%}
   {%- endfor -%}
 </div>
 {%- endif -%}
+
 {% schema %}
 {
   "name": "t:sections.product-page-tab.name",
@@ -215,7 +206,92 @@
 {% endschema %}
 
 {% stylesheet %}
+.product-tabs.accordion {
+  border-top: 2px solid #dae2e6;
+}
+.product-tabs.accordion .accordion-item {
+  border-bottom: 1px solid #dae2e6;
+}
+.product-tabs.accordion .accordion-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 0;
+  text-align: left;
+  padding: 16px 0;
+  cursor: pointer;
+  font-size: 14px;
+}
+.product-tabs.accordion .tab-content {
+  display: none;
+  padding: 0 0 24px;
+  font-size: 14px;
+  line-height: 27px;
+}
+.product-tabs.accordion .tab-content.show {
+  display: block;
+}
+/* +/- icon */
+.product-tabs.accordion .accordion-icon {
+  flex-shrink: 0;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  margin-left: 12px;
+}
+.product-tabs.accordion .accordion-icon::before,
+.product-tabs.accordion .accordion-icon::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.product-tabs.accordion .accordion-icon::before {
+  width: 16px;
+  height: 2px;
+  top: 7px;
+  left: 0;
+}
+.product-tabs.accordion .accordion-icon::after {
+  width: 2px;
+  height: 16px;
+  top: 0;
+  left: 7px;
+}
+.product-tabs.accordion .accordion-toggle.active .accordion-icon::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
 {% endstylesheet %}
 
 {% javascript %}
+document.addEventListener('DOMContentLoaded', function () {
+  var accordion = document.querySelector('.product-tabs.accordion');
+  if (!accordion) return;
+
+  accordion.querySelectorAll('.accordion-toggle').forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+      var isActive = this.classList.contains('active');
+
+      // Close all panels
+      accordion.querySelectorAll('.accordion-toggle').forEach(function (t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-expanded', 'false');
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        if (panel) panel.classList.remove('show', 'active');
+      });
+
+      // Open clicked panel if it wasn't already open
+      if (!isActive) {
+        this.classList.add('active');
+        this.setAttribute('aria-expanded', 'true');
+        var panel = document.getElementById(this.getAttribute('aria-controls'));
+        if (panel) panel.classList.add('show', 'active');
+      }
+    });
+  });
+});
 {% endjavascript %}

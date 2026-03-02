@@ -1,0 +1,182 @@
+{%- if product -%}
+
+{%- assign columns      = section.settings.columns | plus: 0 -%}
+{%- assign product_limit = section.settings.product_limit -%}
+
+{%- comment -%} Inherit product-card display vars from theme settings {%- endcomment -%}
+{%- assign show_discount       = settings.related_show_discount -%}
+{%- assign show_sale           = settings.related_show_sale -%}
+{%- assign sale_label_text     = settings.related_sale_label_text -%}
+{%- assign alternative_image   = settings.related_alternative_image -%}
+{%- assign show_grid_quickview = settings.related_grid_quickview -%}
+{%- assign show_product_category = settings.related_product_category -%}
+{%- assign show_rating_star    = settings.related_rating_star -%}
+{%- assign show_product_price  = settings.related_product_price -%}
+{%- assign grid_swatch_type    = settings.related_grid_swatch_type -%}
+{%- assign show_addtocart      = settings.related_show_addtocart -%}
+{%- assign show_addtolinks     = settings.related_show_addtolinks -%}
+{%- assign view_mode           = 'grid' -%}
+{%- assign view_mode_class     = 'grid' -%}
+{%- assign layout_class        = 'product-default' -%}
+{%- assign pt_layout           = 'default' -%}
+
+{%- comment -%} Image sizing {%- endcomment -%}
+{%- assign image_width  = settings.collection_ratio_width -%}
+{%- assign image_height = settings.collection_ratio_height -%}
+{%- if image_width < image_height -%}
+  {%- assign ar = image_width | divided_by: 1 -%}
+{%- else -%}
+  {%- assign ar = image_width | divided_by: image_height -%}
+{%- endif -%}
+{%- capture image_size -%}{{ image_width }}x{{ image_height }}{%- endcapture -%}
+{%- assign pt = 100 | divided_by: ar | append: '%' -%}
+
+{%- comment -%} Responsive column classes {%- endcomment -%}
+{%- if columns >= 4 -%}
+  {%- capture class_grid %}item-1200-{{ columns }} item-992-4 item-768-3 item-640-2 item-320-1{%- endcapture -%}
+{%- elsif columns == 3 -%}
+  {%- capture class_grid %}item-1200-3 item-640-2 item-320-1{%- endcapture -%}
+{%- else -%}
+  {%- capture class_grid %}item-1200-{{ columns }}{%- endcapture -%}
+{%- endif -%}
+
+{%- comment -%} Resolve collection when on a non-specific context {%- endcomment -%}
+{%- if section.settings.related_type == 'collection' -%}
+  {%- if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' -%}
+    {%- assign found_a_collection = false -%}
+    {%- for c in product.collections -%}
+      {%- if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1 -%}
+        {%- assign found_a_collection = true -%}
+        {%- assign collection = c -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+<div data-section-id="{{ section.id }}" data-section-type="related-products-section"
+     style="background-color: {{ section.settings.bg_color }}; padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+
+    {%- if section.settings.heading != blank -%}
+    <h3 class="title-widget text-{{ section.settings.heading_align }}">
+      <span class="inner">{{ section.settings.heading }}</span>
+    </h3>
+    {%- endif -%}
+
+    {%- if section.settings.related_type == 'collection' and collection and collection.products_count > 1 -%}
+
+      <div class="box_product_related products-collection porto-products">
+        <div class="category-products products products-container {{ view_mode_class }} {{ class_grid }}">
+          <div class="products-grid columns{{ columns }}">
+            {%- assign current_product       = product -%}
+            {%- assign current_product_found = false -%}
+            {%- assign limit                 = product_limit | plus: 1 -%}
+            {%- for product in collection.products limit: limit -%}
+              {%- if product.handle == current_product.handle -%}
+                {%- assign current_product_found = true -%}
+              {%- else -%}
+                {%- unless current_product_found == false and forloop.last -%}
+                  {%- include 'pt-product-loop' -%}
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+
+    {%- elsif section.settings.related_type == 'tags' -%}
+      <div class="box_product_related products-collection porto-products">
+        {%- include 'related-products-by-tags' -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related Products",
+  "class": "section-related-products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Related Products"
+    },
+    {
+      "type": "select",
+      "id": "heading_align",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left",   "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "related_type",
+      "label": "Related products by",
+      "options": [
+        { "value": "collection", "label": "Collection" },
+        { "value": "tags",       "label": "Tags" }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Number of products",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Columns",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products",
+      "category": "Products"
+    }
+  ]
+}
+{% endschema %}

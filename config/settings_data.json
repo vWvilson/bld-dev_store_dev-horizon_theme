@@ -655,7 +655,7 @@
     "product_swatch_type": "1",
     "product_swatch_setting": "1",
     "product_swatch_size": "size-small",
-    "product_tab_style": "horizontal",
+    "product_tab_style": "accordion",
     "move_product_tab": false,
     "full_width_product_tab": false,
     "move_down_product_tab_related": false,
