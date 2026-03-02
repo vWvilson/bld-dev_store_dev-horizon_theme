@@ -1,7 +1,9 @@
 <div class="cart-design-{{settings.shopping_cart_design}} widget-design-{{settings.shopping_cart_widget_design}}">
   <a href="javascript:;" class="icon-cart-header">
-    <i class="icon-mini-cart"></i><span class="cart-total"><span class="cart-qty">{{ cart.item_count }}</span><span {% if settings.language_enable %}data-translate="cart.header.total_numb"{% endif %}>{{ 'cart.header.total_numb' | t }}</span></span>
+    <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.21014 17.1818C6.73671 17.1818 7.18592 17.369 7.55713 17.7439C7.92833 18.1188 8.11364 18.5699 8.11364 19.0965C8.11363 19.6231 7.92646 20.0723 7.55153 20.4435C7.17662 20.8147 6.72554 21 6.19895 21C5.67238 21 5.22317 20.8128 4.85196 20.4379C4.48076 20.063 4.29545 19.6119 4.29545 19.0853C4.29546 18.5588 4.48264 18.1095 4.85756 17.7383C5.23247 17.3671 5.68355 17.1818 6.21014 17.1818ZM16.2329 17.1818C16.7594 17.1818 17.2086 17.369 17.5799 17.7439C17.9511 18.1188 18.1364 18.5699 18.1364 19.0965C18.1364 19.6231 17.9492 20.0723 17.5742 20.4435C17.1994 20.8147 16.7483 21 16.2216 21C15.6951 21 15.2459 20.8128 14.8747 20.4379C14.5035 20.063 14.3182 19.6119 14.3182 19.0853C14.3182 18.5588 14.5054 18.1095 14.8803 17.7383C15.2552 17.3671 15.7063 17.1818 16.2329 17.1818ZM4.28706 0.828698L4.68604 3.81818H20.7641L20.4994 4.98433L18.1131 15.4844L17.9435 16.2273H4.41384L4.30385 15.3985L2.50568 1.90909H0V0H4.17707L4.28706 0.828698ZM6.08523 14.3182H16.4193L18.3722 5.72727H4.94052L6.08523 14.3182Z" fill="currentColor"/></svg><span class="cart-total"><span class="cart-qty">{{ cart.item_count }}</span><span {% if settings.language_enable %}data-translate="cart.header.total_numb"{% endif %}>{{ 'cart.header.total_numb' | t }}</span></span>
+  
   </a>
+  <span>Cart</span>
   <div class="cart-wrapper theme-border-color">
     <div class="cart-inner"> 
       <div class="cart-inner-content">
@@ -9,4 +11,7 @@
       </div>
     </div>
   </div>
+
+
+
 </div>

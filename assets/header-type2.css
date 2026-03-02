@@ -191,10 +191,31 @@
     font-size: 27px;
 }
 
-.header-container.type2 .header-contact .my-wishlist,
-.header-container.type2 .header-contact .my-account {
+.header-right span {
+    display:block;
+    font-size:12px
+}
+
+.header-right a {
+    text-align:center;
+    justify-content:center;
+    align-items:center;
+    padding: 0 30px;
+    border-right: 1px solid black;
+}
+.header-right a.icon-cart-header  {
+    border-right: none;
+}
+.header-right .mini-cart span{
+    position: relative;
+    line-height: 24px;
+
+}
+
+.header-container.type2 .header-right .header-contact .my-wishlist,
+.header-container.type2 .header-right .header-contact .my-account {
     display: inline-block;
-    padding: 0 .125rem;
+    padding: 0 30px;
     vertical-align: middle;
 }
 
