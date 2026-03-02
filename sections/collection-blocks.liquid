@@ -62,7 +62,7 @@
     opacity: 0.85;
   }
   .collection-blocks-cta {
-    text-align: center;
+    text-align: {{ section.settings.cta_alignment }};
     margin-top: 40px;
   }
   .collection-blocks-cta__button {
@@ -207,6 +207,16 @@
         "type": "url",
         "id": "cta_url",
         "label": "Button URL"
+      }, {
+        "type": "select",
+        "id": "cta_alignment",
+        "label": "Button Alignment",
+        "options": [
+          { "value": "left", "label": "Left" },
+          { "value": "center", "label": "Center" },
+          { "value": "right", "label": "Right" }
+        ],
+        "default": "center"
       }, {
         "type": "color",
         "id": "cta_bg_color",
