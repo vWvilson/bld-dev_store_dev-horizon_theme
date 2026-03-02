@@ -306,3 +306,18 @@
         min-height: 60px;
     }
 }
+@media (min-width: 1280px) {
+    ul.top-navigation {
+        max-width: 1200px;
+    }
+}
+@media (min-width: 1200px) {
+    ul.top-navigation {
+        max-width: 1140px;
+    }
+}
+@media (min-width: 992px) {
+    ul.top-navigation {
+        max-width: 960px;
+    }
+}
