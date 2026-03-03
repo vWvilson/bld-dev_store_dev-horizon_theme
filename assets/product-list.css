@@ -409,7 +409,7 @@ ul.product_list_widget li .star-rating .spr-icon-star-empty:before,ul.product_li
 /* Product image wrapper hover opacity */
 .product-image-wrapper{position:relative; margin-bottom: 10px;}
 .product-image-wrapper .product-image,.product-image-wrapper .product-content{transition:opacity 0.3s ease;}
-.products .product-col:hover .product-image-wrapper .product-image,.products .product-col:hover .product-image-wrapper .product-content{opacity:0.2; }
+.products .product-col:hover .product-image-wrapper .product-image,.products .product-col:hover .product-image-wrapper .product-content{opacity:0.3;}
 .product-image-wrapper .links-on-image{position:absolute;top:0;left:0;right:0;bottom:0;z-index:2;pointer-events:none;display:flex;align-items:center;justify-content:center;}
 .product-image-wrapper .links-on-image a{pointer-events:all;}
 .products .product-col:hover .product-image-wrapper {
