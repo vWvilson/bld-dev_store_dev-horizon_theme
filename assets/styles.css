@@ -568,7 +568,7 @@ html .background-color-light{background:#fff;}
 .header-container.sticky-header .main-header{position:fixed !important;top:0 !important;left:0 !important;width:100% !important;margin:0 !important;padding:7px 0 !important;background-color:#1e1e1e;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 1px 2px rgba(0, 0, 0, 0.1);z-index:200 !important;pointer-events:all;}
 .header-container.sticky-header .main-header .logo{display:none;}
 .header-container.sticky-header .main-header .logo a.logo-sticky{display:block;}
-.header-container.sticky-header .main-nav{position:relative;}
+.header-container.sticky-header .main-nav{position:relative; background-color: #0078a9;padding:15px 0;}
 .header-container.sticky-header .main-nav .logo_sticky{display:block;margin-right:25px;z-index:2;min-width:100px;}
 .header-container.sticky-header .header-wrapper{position:fixed;top:0;left:0;width:100%;margin:0;padding:7px 0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 1px 2px rgba(0, 0, 0, 0.1);z-index:99;pointer-events:all;}
 .header-container.sticky-header .header-wrapper .mini-cart{display:-ms-flexbox;display:flex !important;}

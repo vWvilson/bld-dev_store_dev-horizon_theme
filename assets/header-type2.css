@@ -229,7 +229,7 @@
 .header-container.type2 .mini-cart {
     position: relative;
     line-height: 39px;
-    margin-left: .875rem;
+    text-align: center;
 }
 
 @media (max-width:991px) {
