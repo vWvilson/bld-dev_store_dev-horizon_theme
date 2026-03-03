@@ -1057,52 +1057,29 @@
           "1521143434310": {
             "type": "menu_item",
             "settings": {
-              "title": "Articles / Stories",
+              "title": "ORDER STATUS",
               "button_link": "shopify://blogs/news-stories"
             }
           },
           "1521143403132": {
             "type": "menu_item",
             "settings": {
-              "title": "My Account",
+              "title": "RETURN POLICY",
               "button_link": "/account"
             }
           },
           "1521143416189": {
             "type": "menu_item",
-            "disabled": true,
             "settings": {
-              "title": "Bulk Order Form",
-              "button_link": "shopify://pages/bulk-order-form"
-            }
-          },
-          "1521143430837": {
-            "type": "menu_wishlist",
-            "settings": {
-              "title": "My Wishlist"
-            }
-          },
-          "1597801894588": {
-            "type": "menu_item",
-            "settings": {
-              "title": "Cart",
-              "button_link": "/cart"
-            }
-          },
-          "1521143443349": {
-            "type": "menu_login",
-            "settings": {
-              "title": "Login"
+              "title": "CONTACT US",
+              "button_link": "shopify://pages/contact"
             }
           }
         },
         "block_order": [
           "1521143434310",
           "1521143403132",
-          "1521143416189",
-          "1521143430837",
-          "1597801894588",
-          "1521143443349"
+          "1521143416189"
         ],
         "settings": {}
       },
