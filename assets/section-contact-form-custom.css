@@ -1,4 +1,8 @@
 /* Contact Form Custom Section */
+form{
+  width: 65%;
+  min-width: 600px;
+}
 .cfc {
   background: var(--cfc-bg);
   color: var(--cfc-text);
@@ -272,6 +276,10 @@ display: flex;
 
 /* Responsive */
 @media (max-width: 990px) {
+  form {
+    width: 100%;
+    min-width: none;
+  }
   .cfc__field--half {
     width: 100%;
   }
