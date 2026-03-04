@@ -22,7 +22,7 @@ form{
 }
 
 .cfc__titleText {
-  margin: 0;
+
   color: var(--cfc-title-color);
   font-size: var(--cfc-title-size);
   line-height: 1.1;
