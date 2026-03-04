@@ -277,7 +277,7 @@ display: flex;
 /* Responsive */
 @media (max-width: 990px) {
   form {
-    width: 100%;
+    width:unset;
     min-width: none;
   }
   .cfc__field--half {
