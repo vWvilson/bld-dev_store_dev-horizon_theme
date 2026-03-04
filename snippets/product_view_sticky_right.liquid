@@ -237,13 +237,6 @@
         </div>
       </div>
       <div class="product-after">
-        {%- if settings.product_short_custom != blank -%}
-        <div class="porto-custom-block">
-          <div class="custom-block-bar"> 
-            {{ settings.custom_block_content_after }} 
-          </div>
-        </div>
-        {%- endif -%}
         {%- if settings.disable_socical_icon == blank -%}
         {% include 'sharelink' %}
         {%- endif -%}

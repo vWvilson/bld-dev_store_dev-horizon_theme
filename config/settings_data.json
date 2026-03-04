@@ -613,7 +613,7 @@
     "product_type": true,
     "product_vendor": true,
     "product_short_desc": "0",
-    "product_short_custom": true,
+    "product_short_custom": false,
     "custom_block_content_after": "<div class=\"item\">\n<i class=\"icon-shipped\"></i><h3>FAST<br>SHIPPING</h3>\n</div>\n<div class=\"item\">\n<i class=\"icon-us-dollar\"></i><h3>BEST<br>VALUE</h3>\n</div>\n<div class=\"item\">\n<i class=\"icon-online-support\"></i><h3>EXCELLENT<br>CUSTOMER SERVICE</h3>\n</div>",
     "product_short_custom_fullwidth": false,
     "custom_block_content_fullwidth": "<div class=\"item\"><h3>Fee Shipping</h3></div><div class=\"item\"><h3>100% Money Back Guarantee</h3></div><div class=\"item\"> <h3>Online Support 24/7</h3>\n</div>",

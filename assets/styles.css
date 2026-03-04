@@ -447,7 +447,9 @@ html .background-color-light{background:#fff;}
 .owl-carousel.owl-carousel-lazy .item{display:-ms-flexbox;display:flex;position:relative;-ms-flex-wrap:nowrap;flex-wrap:nowrap;width:100%;flex:0 0 100%;max-width:100%;}
 .owl-carousel.owl-carousel-lazy.slideshow .item:not(:first-child){display:none;}
 .owl-carousel.owl-carousel-lazy .image-link::after{content:none;}
-.owl-carousel.owl-carousel-lazy.owl-loaded{display:block;overflow:visible;}
+/* .owl-carousel.owl-carousel-lazy.owl-loaded{display:block;overflow:visible;}
+ */
+ .owl-carousel.owl-carousel-lazy.owl-loaded{display:none;}
 .one-product .owl-carousel.owl-carousel-lazy, .home_slider_banner .owl-carousel.owl-carousel-lazy, .parallax .owl-carousel.owl-carousel-lazy, .sidebar .owl-carousel.owl-carousel-lazy, .sidebar-right .owl-carousel.owl-carousel-lazy, .related-posts .owl-carousel.owl-carousel-lazy{display:block;}
 .one-product .owl-carousel.owl-carousel-lazy .item, .home_slider_banner .owl-carousel.owl-carousel-lazy .item, .parallax .owl-carousel.owl-carousel-lazy .item, .sidebar .owl-carousel.owl-carousel-lazy .item, .sidebar-right .owl-carousel.owl-carousel-lazy .item, .related-posts .owl-carousel.owl-carousel-lazy .item{display:block;}
 .one-product .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child), .home_slider_banner .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child), .parallax .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child), .sidebar .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child), .sidebar-right .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child), .related-posts .owl-carousel.owl-carousel-lazy:not(.owl-loaded) > *:not(:first-child){display:none;}

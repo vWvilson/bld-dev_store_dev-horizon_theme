@@ -5,6 +5,7 @@
         <div class="product-img-list{% if settings.media_slide_layout == 'verticle' %} thumb-vertical{% endif %}">
           {% include 'media' %}
         </div>
+        {% include 'product-tech-docs' %}
       </div>
       <div class="product-shop col-md-{{main_col}}">
         <div class="product-shop-wrapper">
@@ -121,13 +122,6 @@
               {%- endif -%}
               {%- endif -%} 
               {{ description }} 
-            </div>
-          </div>
-          {%- endif -%}
-          {%- if settings.product_short_custom != blank -%}
-          <div class="porto-custom-block">
-            <div class="custom-block-bar"> 
-              {{ settings.custom_block_content_after | split: '[lang2]' | first }} 
             </div>
           </div>
           {%- endif -%}

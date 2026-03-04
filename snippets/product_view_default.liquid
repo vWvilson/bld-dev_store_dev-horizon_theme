@@ -128,13 +128,6 @@
             </div>
           </div>
           {%- endif -%}
-          {%- if settings.product_short_custom != blank -%}
-          <div class="porto-custom-block">
-            <div class="custom-block-bar"> 
-              {{ settings.custom_block_content_after | split: '[lang2]' | first }} 
-            </div>
-          </div>
-          {%- endif -%}
           <div class="middle-product-detail">
             {%- if settings.product_availability -%}
             <div class="product-inventory">

@@ -25,8 +25,6 @@
   {%- if found_first_match == true -%}
     {%- if first_related_product == true -%}
       {%- assign first_related_product = false -%}
-      <h3 class="title-widget"><span class="inner">{{ 'products.general.related_products' | t }}</span></h3>
-		
       {%- assign show_discount = settings.related_show_discount -%}
       {%- assign show_sale = settings.related_show_sale -%}
       {%- assign sale_label_text = settings.related_sale_label_text -%}

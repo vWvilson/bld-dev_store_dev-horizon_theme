@@ -1,4 +1,3 @@
-<h3 class="title-widget"><span class="inner">{{ 'products.general.related_products' | t }}</span></h3>
 {% if collection == null or collection.handle == 'frontpage' or collection.handle == 'all' %}
   {% assign found_a_collection = false %}
   {% for c in product.collections %}

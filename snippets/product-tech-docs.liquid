@@ -1,0 +1,42 @@
+{%- assign tech_sku = product.selected_or_first_available_variant.sku -%}
+{%- assign desc_plain = product.description | strip_html -%}
+{%- assign cure_curve_id = '' -%}
+{%- if desc_plain contains 'See Cure Curve' -%}
+  {%- assign cure_part = desc_plain | split: 'See Cure Curve ' | last -%}
+  {%- assign cure_curve_id = cure_part | split: ' ' | first | split: ',' | first | split: '.' | first -%}
+{%- endif -%}
+
+<div class="product-tech-docs" style="text-align: center; padding: 12px 0;">
+  <a id="tds-link-{{ product.id }}"
+     href="https://afd-5d7ead6983e62d81-dzf5huhfhaa6dkax.a03.azurefd.net/tech-data-sheet/{{ tech_sku }}.pdf"
+     target="_blank"
+     style="display: inline-block; margin: 6px 10px; font-weight: 600;">
+    Tech Data Sheet
+  </a>
+  <a href="https://buyat.ppg.com/ehsdocumentmanagerpublic/documentSearchInnerFrame.aspx?CodeCondition=IsEqualTo&Form=53bd5d15b2c796a10000&CodeValue={{ tech_sku }}"
+     target="_blank"
+     style="display: inline-block; margin: 6px 10px; font-weight: 600;">
+    Safety Data Sheet
+  </a>
+  {%- if cure_curve_id != '' -%}
+  <a href="https://buyat.ppg.com/rep_powder/PDFs/CureCurves/{{ cure_curve_id }}.jpg"
+     target="_blank"
+     style="display: inline-block; margin: 6px 10px; font-weight: 600;">
+    Cure Curve
+  </a>
+  {%- endif -%}
+</div>
+
+<script>
+  (function() {
+    var tdsLink = document.getElementById('tds-link-{{ product.id }}');
+    if (!tdsLink) return;
+    var primary = tdsLink.getAttribute('href');
+    var fallback = 'https://buyat.ppg.com/rep_powder/PDFs/CDPFILES/{{ tech_sku }}.pdf';
+    fetch(primary, { method: 'HEAD' }).then(function(r) {
+      if (!r.ok) tdsLink.setAttribute('href', fallback);
+    }).catch(function() {
+      tdsLink.setAttribute('href', fallback);
+    });
+  })();
+</script>
