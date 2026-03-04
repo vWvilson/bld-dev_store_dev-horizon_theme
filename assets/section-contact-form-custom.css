@@ -18,6 +18,7 @@ form{
 .cfc__title {
   margin-bottom: var(--cfc-title-mb);
   text-align: var(--cfc-title-align);
+  
 }
 
 .cfc__titleText {
@@ -276,8 +277,8 @@ display: flex;
 
 /* Responsive */
 @media (max-width: 990px) {
-  form {
-    width:unset;
+  .cfc form {
+    width: unset;
     min-width: unset;
   }
   .cfc__field--half {
