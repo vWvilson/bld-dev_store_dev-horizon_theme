@@ -1419,7 +1419,11 @@ var SW = SW || {};
         if(wishlistCount > 0) {
           $('#header-wishlist .wishlistCount').html('('+wishlistCount+')');
           $('.header-wishlist-count-badge').html(wishlistCount).show();
+        } else {
+          $('.header-wishlist-count-badge').hide();
         }
+      } else {
+        $('.header-wishlist-count-badge').hide();
       }
 
       SW.collection.checkWishlist();
