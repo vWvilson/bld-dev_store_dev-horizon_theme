@@ -1,1 +1,1 @@
-{"sections":{"breadcrumb":{"type":"breadcrumb","settings":{}},"main":{"type":"main-page","settings":{}}},"order":["breadcrumb","main"]}
+{"sections":{"defualt-page-image-header":{"type":"defualt-page-image-header","settings":{}},"breadcrumb":{"type":"breadcrumb","settings":{}},"main":{"type":"main-page","settings":{}}},"order":["defualt-page-image-header","breadcrumb","main"]}
