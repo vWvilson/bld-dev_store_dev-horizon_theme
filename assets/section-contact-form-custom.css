@@ -1,5 +1,5 @@
 /* Contact Form Custom Section */
-form{
+.cfc form {
   width: 65%;
   min-width: 600px;
 }
