@@ -222,14 +222,15 @@
         "image_k8cBFA"
       ],
       "custom_css": [
-        "h2 {color: #0078a9; font-size: 22px;}"
+        "h2 {color: #0078a9; font-size: 22px;}",
+        ".two-column-content__grid {background-color:#F4F7F8;}"
       ],
       "name": "Two column content",
       "settings": {
         "section_width": "page",
         "background_color": "#ffffff",
         "left_column_bg": "#ffffff",
-        "right_column_bg": "#f4f7f8",
+        "right_column_bg": "#ffffff",
         "section_padding": "60px 0",
         "column_gap": 40,
         "vertical_alignment": "center",
