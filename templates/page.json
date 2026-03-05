@@ -12,7 +12,7 @@
     "defualt-page-image-header": {
       "type": "defualt-page-image-header",
       "settings": {
-        "section_width": "full",
+        "section_width": "page",
         "image": "shopify://shop_images/image_17.jpg",
         "title": "Our Process",
         "height": 400,
