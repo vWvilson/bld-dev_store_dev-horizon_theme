@@ -223,14 +223,13 @@
       ],
       "custom_css": [
         "h2 {color: #0078a9; font-size: 22px;}",
-        ".two-column-content__grid {background-color:#F4F7F8;}"
+        ".two-column-content__grid {background-color: #f4f7f8;}",
+        ".two-column-content__column.two-column-content__column--right {padding: 0px 75px;}"
       ],
       "name": "Two column content",
       "settings": {
         "section_width": "page",
         "background_color": "#ffffff",
-        "left_column_bg": "#ffffff",
-        "right_column_bg": "#ffffff",
         "section_padding": "60px 0",
         "column_gap": 40,
         "vertical_alignment": "center",
