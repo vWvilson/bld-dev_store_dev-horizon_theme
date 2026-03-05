@@ -4,11 +4,12 @@
     width: 100%;
     height: {{ section.settings.height }}px;
     overflow: hidden;
+    margin: 50px auto;
   }
   .page-header__photo {
     position: absolute;
     inset: 0;
-    width: 100%;
+    width: 70%
     height: 100%;
     object-fit: cover;
     object-position: center 30%;
@@ -22,15 +23,18 @@
     box-shadow: inset -80px 0 120px rgba(0,0,0,0.25);
   }
   .page-header__label {
-    position: absolute;
+position: absolute;
     right: 6%;
+    width: 40%;
+    text-align: center;
     top: 50%;
     transform: translateY(-50%);
     font-weight: 300;
-    font-size: clamp(2rem, 6vw, {{ section.settings.title_size }}px);
+    max-width: 50%;
+    font-size: clamp(2rem, 6vw, 72px);
     letter-spacing: 0.18em;
     color: #ffffff;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.3);
+  
   }
 
   @media screen and (max-width: 768px) {
