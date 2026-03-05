@@ -89,11 +89,11 @@
       ],
       "name": "Collection Blocks",
       "settings": {
-        "background_color": "#ffffff",
+        "background_color": "#f4f7f8",
         "section_width": "page",
         "gap": 20,
         "title_size": 20,
-        "title_color": "#333333",
+        "title_color": "#111111",
         "button_text_color": "#0078a9",
         "cta_url": "shopify://collections/all",
         "cta_alignment": "left",
