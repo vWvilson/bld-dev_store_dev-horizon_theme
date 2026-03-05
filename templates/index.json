@@ -230,7 +230,7 @@
         "background_color": "#ffffff",
         "section_padding": "60px 0",
         "column_gap": 40,
-        "vertical_alignment": "stretch",
+        "vertical_alignment": "center",
         "margin_top": "0px",
         "margin_bottom": "0px",
         "primary_button_bg": "#111111",
