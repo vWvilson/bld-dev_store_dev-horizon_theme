@@ -18,7 +18,8 @@
     gap: {{ section.settings.gap }}px;
   }
   .collection-block {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
@@ -29,13 +30,14 @@
   }
   .collection-block__image {
     flex: 0 0 auto;
-    width: auto;
-    max-width: 45%;
+   aspect-ratio: 150/125;
+   backfround-color:white;
+
     height: auto;
     padding: 7px;
   }
   .collection-block-container {
-    padding: 30px;
+    padding: 0 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
